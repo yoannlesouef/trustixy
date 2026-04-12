@@ -7,6 +7,23 @@ It enables teams to register AI systems, assess risk levels, and generate compli
 
 ---
 
+## 🎯 Target
+
+### Who is it for?
+- **Companies building or using AI systems** in the EU
+- **Teams without legal expertise** who need to become compliant quickly
+
+### What problem does it solve?
+The EU AI Act requires companies to:
+1. **Register** their AI systems
+2. **Classify** their risk level (minimal / limited / high / unacceptable)
+3. **Produce compliance documentation**
+4. Maintain an **audit trail**
+
+Trustixy automates all of this using LLMs, removing the need for legal or compliance specialists.
+
+---
+
 ## ✨ Features
 
 ### 🧾 AI Systems Registry
@@ -135,6 +152,30 @@ The initial version (V1) includes:
 > "Get compliant with the EU AI Act in minutes"
 
 Trustixy aims to become the **standard platform for AI governance and compliance**.
+
+---
+
+## 🤝 Go-to-Market Strategy
+
+Trustixy adopts a **B2B2B prescriber model** — distributing through trusted intermediaries who already serve SMEs, rather than competing head-to-head with well-funded players.
+
+### Key Prescriber Channels
+
+| Prescriber | Why they push Trustixy |
+|---|---|
+| Accounting & audit firms | Natural extension of their compliance advisory |
+| Law firms & legal consultants | Delivery tool for AI compliance mandates |
+| IT integrators (ESN/SSII) | Compliance add-on to AI project deliverables |
+| Industry federations | Practical tool to offer their SME members |
+| Cloud & AI vendors | Marketplace compliance layer for AI adoption |
+
+### Partnership Tiers
+- **Referral** — 20% first-year MRR commission
+- **Reseller** — 30% recurring MRR, white-label option
+- **Embedded** — API integration, custom pricing
+- **Group** — Flat fee, co-branded portal for federations
+
+See full details in [`/specs/prescriber-partnership.md`](specs/prescriber-partnership.md).
 
 ---
 
