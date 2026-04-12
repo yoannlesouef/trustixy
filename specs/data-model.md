@@ -71,3 +71,14 @@
 * metadata (jsonb)
 * created_at (timestamp)
 
+## agent_logs
+
+* id (uuid)
+* agent_name (text)
+* run_at (timestamp)
+* status (text) — success | warning | error
+* summary (text)
+* output (jsonb)
+* admin_action (text) — approved | dismissed | snoozed | null
+* acted_at (timestamp)
+
