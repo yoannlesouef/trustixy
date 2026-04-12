@@ -2,10 +2,42 @@
 
 # Database Schema
 
+## organizations
+
+* id (uuid)
+* name (text)
+* created_at (timestamp)
+
+## partners
+
+* id (uuid)
+* organization_id (uuid) — the partner's own org
+* tier (text) — referral | reseller | embedded | group
+* white_label_config (jsonb) — logo, colors, custom domain
+* commission_rate (numeric)
+* status (text) — pending | active | suspended
+* created_at (timestamp)
+
+## partner_clients
+
+* id (uuid)
+* partner_id (uuid)
+* client_organization_id (uuid)
+* invited_at (timestamp)
+* status (text) — invited | active
+
+## users
+
+* id (uuid)
+* organization_id (uuid)
+* email (text)
+* role (text) — admin | member
+* created_at (timestamp)
+
 ## ai_systems
 
 * id (uuid)
-* user_id (uuid)
+* organization_id (uuid)
 * name (text)
 * description (text)
 * use_case (text)
@@ -34,6 +66,7 @@
 
 * id (uuid)
 * ai_system_id (uuid)
+* user_id (uuid)
 * action (text)
 * metadata (jsonb)
 * created_at (timestamp)
