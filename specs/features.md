@@ -1,161 +1,174 @@
 # Features
 
+## Quick Classification Path
+
+The primary entry point for new users. No setup required. Delivers a classification result in under 3 minutes.
+
+* Single input: system name
+* 5 essential questions (one at a time): description, affected population, human override, data types, deployment scope
+* Optional: 5 refinement questions — expand to improve confidence score (not required)
+* Immediate result: risk level + top 3 obligations
+* From result: generate document in one click, or save to registry
+
+---
+
 ## AI System Identification Wizard
 
-The wizard is triggered automatically on first login and accessible at any time from the dashboard ("Discover my AI systems"). Its purpose is to solve the "step zero" problem: most SMEs don't know which of their tools qualify as AI systems under the EU AI Act.
+Optional path for users who want to discover all in-scope systems at once. Accessible from the empty state, dashboard, and "Add system" menu.
 
-### Step 1 — Sector selection
-* User selects their primary sector (one or more): Healthcare | Finance & Insurance | HR & Recruitment | Legal | Education | Retail & E-commerce | Manufacturing | Public Sector | Other
-* Sector is stored on the organization profile and used to contextualize all subsequent analysis
+### Step 1 — Sector + tools (single screen)
+* Sector selector (single-select, filters tool list immediately)
+* Categorized tool checklist filtered by sector:
+  * Productivity: Microsoft Copilot, Google Workspace AI, Notion AI, GitHub Copilot…
+  * Customer service: Intercom AI, Zendesk AI, custom chatbots…
+  * HR & Recruitment: CV screening tools, Workday AI, LinkedIn Recruiter…
+  * Sales & CRM: Salesforce Einstein, HubSpot AI, lead scoring tools…
+  * Finance: fraud detection, credit scoring, forecasting tools…
+  * Custom: free-text for unlisted tools
+* Helper: "Check everything you use — we'll filter what's in scope"
 
-### Step 2 — Tool inventory checklist
-* User is presented with a categorized list of common AI-powered tools, pre-populated by sector:
-  * **Productivity**: Microsoft Copilot, Google Workspace AI, Notion AI, GitHub Copilot…
-  * **Customer service**: Intercom, Zendesk AI, custom chatbots…
-  * **HR & Recruitment**: LinkedIn Recruiter AI, Workday AI, CV screening tools…
-  * **Sales & CRM**: Salesforce Einstein, HubSpot AI, lead scoring tools…
-  * **Finance**: automated credit scoring, fraud detection, forecasting tools…
-  * **Custom / other**: free-text field for tools not in the list
-* User checks tools they use; they can also add tools not in the list manually
-
-### Step 3 — LLM analysis & system suggestions
-* For each checked tool, Trustixy runs the **Wizard Analysis** LLM prompt (see `specs/llm-prompts.md`)
-* The LLM returns: whether this tool is likely in scope of the EU AI Act, a suggested risk category, and a pre-filled system description
-* Results are displayed as a review screen: "We identified X systems that may require EU AI Act compliance"
-* Each suggested system shows: name, likely risk level, brief explanation, pre-filled description
-* User can: confirm, edit, or exclude each suggestion
-
-### Step 4 — Batch system creation
-* User confirms the list and all selected suggestions are created as AI systems in the registry with status `unclassified`
-* Pre-filled descriptions are editable before confirmation
-* Description quality is validated before save (see Description Quality Check below)
+### Step 2 — Review and confirm (single screen)
+* LLM analysis runs inline (~3s)
+* In-scope tools shown as cards: risk level badge, editable description, include/exclude toggle
+* Out-of-scope tools collapsed
+* Batch creation on confirm
 
 ### Description Quality Check
-* Applied on every system save (wizard and manual)
-* LLM evaluates the description against a minimum quality threshold: is it specific enough to enable accurate classification?
-* If quality is insufficient: inline warning with specific suggestions ("Please clarify how the system makes decisions and what data it uses")
-* Classification is not blocked but the warning persists until the description meets the threshold
+* Runs automatically on every system save (wizard and manual)
+* LLM returns a quality score (0–100) and specific improvement suggestions
+* Displayed as a subtle indicator below the description field:
+  * Score ≥ 60: green dot — "Good description"
+  * Score < 60: amber dot — "Could be more specific" + tooltip with suggestions
+* **Never blocks classification** — the user always decides whether to improve the description first
+* Low quality is noted in the audit log and shown alongside the classification result
 
 ---
 
 ## AI Systems Registry
 
 * Create / edit / archive AI systems (soft-delete only — audit trail preserved)
-* Fields: name, description, use_case, data_used, autonomy_level, owner
+* Fields: name, description, use_case, data_used, autonomy_level, owner, sector
+* `source` field: quick_path | wizard | manual
 * `compliance_status` per system: `unclassified` | `compliant` | `needs_review` | `at_risk`
 * `last_classified_at`, `last_reviewed_at` timestamps
+* `description_quality_score` and `description_quality_feedback` stored per system
 * Status auto-degrades to `needs_review` when:
   * A regulatory update affects the system's use case or risk category
   * The system description is updated by the user
   * More than 12 months have passed since the last classification
 
+---
+
 ## Risk Classification
 
-* Structured questionnaire (10 questions covering: use case, affected population, decision autonomy, data sensitivity, human oversight, sector)
-* LLM classification aligned to the current regulatory version
+* **5 essential questions** (required): description, affected population, human override, data sensitivity, deployment context
+* **5 optional refinements** (improve confidence score): sector, scale, explainability, bias testing, regulated product
+* LLM classification aligned to current regulatory version
 * Every classification stores:
   * `risk_level`: minimal | limited | high | unacceptable
-  * `explanation`: plain-language justification
-  * `obligations`: list of applicable regulatory obligations
-  * `confidence_score`: 0–100 — how certain the LLM is of this classification
-  * `requires_expert_review`: true if confidence < 70% or if use case falls in a sensitive sector
+  * `explanation`: plain-language justification (2–3 sentences)
+  * `obligations`: list of applicable obligations with implementation guides
+  * `confidence_score`: 0–100
+  * `requires_expert_review`: true if confidence < 70 or sensitive sector
   * `triggered_by`: user | regulatory_change | system_update
-  * `regulatory_version_id`: which EU AI Act version was in effect
-  * `is_current`: true for the latest classification of this system
-* Full classification history accessible per system
-* Classifications with `requires_expert_review: true` display a warning and prompt the user to request prescriber review
+  * `regulatory_version_id`
+  * `is_current`
+* Classification history accessible per system (tab, not default view)
+* Low-confidence warning surfaced as an invitation ("Strengthen with expert review") — not as a blocker
+
+---
 
 ## Obligations Checklist
 
-* Each classification produces an actionable obligations checklist (not just a document section)
-* Each obligation item: title, description, regulatory reference, status (todo | in_progress | done), optional due date
-* Users can update obligation status as they implement compliance measures
-* Checklist completion percentage visible on the system page and dashboard
-* Checklist items are versioned: a new classification creates a new checklist (previous one archived)
-* Completing all obligations triggers status upgrade to `compliant`
+* Generated from each classification
+* Each item: title, description, implementation_guide, regulatory_reference, status (todo | in_progress | done), optional due date
+* **Top 3 most critical obligations shown by default** — "Show all X" toggle
+* Completion percentage visible on system page and dashboard
+* Completing all obligations → status upgrades to `compliant`
+* Checklist versioned: new classification creates new checklist (previous archived)
+
+---
 
 ## Compliance Status
 
-* Per-system badge: `Compliant` | `Needs Review` | `At Risk` | `Unclassified`
-* Organization-level summary: count by status, overall compliance score
-* Status changes are logged in the audit trail
-* Partner portal shows compliance health per client organization
+* Per-system badge: `Compliant` | `Needs attention` | `Not assessed`
+  * (displayed label simplified; stored value: compliant | needs_review | at_risk | unclassified)
+* Organization summary: count by status
+* Partner portal shows health per client organization
+
+---
 
 ## Regulatory Change Alerts
 
-* Triggered when the Compliance Intelligence Tracker agent detects a relevant EU AI Act update
+* Triggered when Compliance Intelligence Tracker detects a confirmed EU AI Act update
 * Affected systems auto-flagged as `needs_review`
-* Alert includes: what changed, which systems are affected, recommended action
-* In-app notification + email
-* Workflow: pending → acknowledged → dismissed (all states logged)
+* Alert shown as non-intrusive banner on system page + badge in nav
+* Email notification
+* Workflow: pending → acknowledged → dismissed (all logged)
+* Alerts Center accessible via nav badge — hidden from nav when no active alerts
+
+---
 
 ## Prescriber Certification
 
-Prescribers must complete a certification before they can co-sign documents. This serves two purposes: give prescribers the knowledge to co-sign confidently, and give end users assurance that the reviewer is qualified.
+Two levels allowing prescribers to start quickly and upgrade when ready.
 
-### Certification program
-* In-app training module: ~2 hours, covering:
-  * EU AI Act fundamentals (risk levels, obligations by level, key deadlines)
-  * How to evaluate an AI system classification
-  * Sector-specific risk criteria (Healthcare, Finance, HR, Education)
-  * Scope and limits of the co-signature act
-  * Professional liability framework and insurance considerations
-* Assessment: 20-question quiz, 80% pass threshold
-* On pass: `certified_at` stored on partner profile, certification badge displayed on all co-signed documents
-* Certification validity: 12 months — renewal required (shorter module, 30 min, focused on regulatory changes)
-* Certification version tracked: a new version is issued when the EU AI Act is significantly updated
+### Level 1 — Scope Acceptance (15 minutes)
+* Read the Co-signature Scope Document (no forced scroll — single checkbox acceptance)
+* Unlocks co-signature for Minimal and Limited risk systems
+* Badge on co-signed documents: "Scope-accepted review"
+* No assessment required
 
-### Co-signature scope document
-* Every prescriber reviews and explicitly accepts the **Co-signature Scope Document** before their first co-signature
-* The scope document defines precisely what the prescriber confirms when co-signing:
-  1. The system description and use case appear accurate and complete
-  2. The AI-generated classification is appropriate given their professional judgment
-  3. The listed obligations are applicable and complete
-  4. Their review was conducted using professional care consistent with their advisory practice
-* The scope document states explicitly what the co-signature does NOT cover:
-  * It is not a guarantee that obligations have been or will be implemented
-  * It is not a legal opinion on the organization's full regulatory compliance posture
-  * It does not replace the organization's own legal counsel
-* The scope document is versioned (`cosignature_scope_version`) — prescribers re-accept when it changes
-* Scope document text is publicly accessible on the Trustixy legal page
+### Level 2 — Full Certification (~90 minutes)
+* 4 modules: EU AI Act risk levels, how to review a classification, co-signature responsibilities, sector quick-guides
+* 15-question assessment, 75% pass threshold
+* Immediate retry on failure (no delay)
+* Unlocks co-signature for all risk levels including High
+* Badge: "Certified AI Compliance Reviewer"
+* Valid 12 months; renewal: 20-min module + 5-question quiz
+
+### Co-signature Scope Document
+* Defines what the prescriber confirms (system accuracy, classification appropriateness, obligations completeness)
+* Defines what is excluded (guarantee of implementation, full legal opinion, replacement for own counsel)
+* Versioned — prescribers re-accept on material change
+* Publicly accessible on Trustixy legal page
+
+---
 
 ## Prescriber Co-signature
 
-* Only certified prescribers (certification valid) can co-sign documents
-* Any generated document can be submitted for co-signature to the organization's prescriber partner
-* Co-signature request notifies the prescriber via email + partner portal
-* Prescriber reviews classification, obligations, and document in the partner portal
-* **Professional notes**: prescriber can add a free-text "Reviewer comments" section (optional but recommended for complex or high-risk systems) — included in the document and PDF
-* Prescriber can: approve (sign), request changes, or decline
-* On approval: prescriber name, firm, certification badge, and date embedded in the document; document status set to `co-signed`
-* Co-signed documents display a verified badge + certification status visible to the end user
-* Co-signature is optional but recommended — prominently surfaced when `requires_expert_review: true`
-* Only one active co-signature per document version; re-generation resets signature status
+* Level 1 certified prescribers can sign Minimal/Limited risk documents
+* Level 2 certified prescribers can sign all risk levels
+* Co-signature request notifies prescriber via email + partner portal
+* Prescriber reviews on a two-panel page (document + review actions)
+* **Professional notes**: optional free-text reviewer comments — included in document as "Reviewer Comments" section
+* Actions: approve & sign | request changes | decline
+* On approval: prescriber name, firm, certification level badge, date embedded in document
+* No linked prescriber → user offered partner directory + "Download with disclaimer" fallback
+
+---
 
 ## Compliance Document Generator
 
-* Generates a structured EU AI Act compliance document
-* Document is linked to a specific `classification_id`
-* Every document includes a mandatory, non-removable disclaimer (see Legal Scope in product.md)
-* Document header: generation date, regulatory version, classification result, confidence score, signature status
-* Document versions: multiple versions per system, each tied to a classification; older ones marked as superseded
-* Document is exportable as PDF or text
+* Linked to specific classification_id
+* Mandatory disclaimer block (non-removable, compact footer style)
+* Header: date · risk level · regulatory version date · status
+* Versioned per system; older versions accessible in history tab
+* Exportable as PDF
+
+---
 
 ## Audit Log
 
-* Immutable log of all actions:
-  * `create`, `update`, `archive` — system lifecycle
-  * `classify` — classification run (with trigger type and confidence score)
-  * `obligation_updated` — checklist item status changed
-  * `generate_document` — document generated
-  * `signature_requested`, `signature_approved`, `signature_declined` — co-signature events
-  * `alert_acknowledged`, `alert_dismissed` — regulatory alert handling
-  * `status_changed` — compliance status transitions
-* Each entry: user, timestamp, action type, before/after metadata
+* Immutable, always running in the background — not surfaced in primary UX
+* Accessible from system page actions menu ("View audit trail")
+* Actions logged: create | update | archive | classify | obligation_updated | generate_document | signature_requested | signature_approved | signature_declined | alert_acknowledged | alert_dismissed | status_changed | wizard_completed | certification_completed | cosignature_scope_accepted
 * Exportable as PDF or CSV
+
+---
 
 ## Export
 
-* Export compliance document (PDF) — includes disclaimer, signature block, regulatory version
-* Export full system audit trail (PDF / CSV)
-* Export organization compliance report: all systems, statuses, classification dates, obligation completion rates
+* Export compliance document (PDF) — disclaimer + signature block + regulatory version
+* Export system audit trail (PDF / CSV) — from actions menu on system page
+* Export organization compliance report — from dashboard settings menu

@@ -8,7 +8,7 @@ Your AI systems, compliant by design.
 **Sub-headline**
 The EU AI Act requires you to register, classify, and document every AI system your organization uses — and keep it up to date as the regulation evolves. Trustixy makes this manageable: structured, traceable, and human-validated.
 
-**Primary CTA:** Start for free
+**Primary CTA:** Classify your first system — free, 3 minutes
 **Secondary CTA:** Become a partner
 
 **Trust signals (below CTAs)**
@@ -41,17 +41,17 @@ The EU AI Act is a living regulation. When new guidelines are published, which o
 
 **Section title:** A living compliance registry, not a one-time document.
 
-**Step 1 — Register**
-Add your AI systems to a structured, centralized registry. Each system gets a compliance status, a full history, and an actionable checklist of obligations.
+**Step 1 — Classify in 3 minutes**
+Name your AI tool, answer 5 questions. Get a risk level, a plain-language explanation, and a list of what you need to do. No setup, no legal expertise required.
 
-**Step 2 — Classify**
-Our AI runs a structured assessment aligned to the current EU AI Act version. Every classification is confidence-scored, versioned, and linked to the regulatory context in which it was made.
+**Step 2 — Build your registry**
+Not sure which tools are in scope? The identification wizard analyzes your full tool stack and creates your registry in one go. Every system tracked, every history preserved.
 
-**Step 3 — Validate**
-Request co-signature from your prescriber partner (accounting firm, law firm, or IT integrator). They review and endorse your document — giving it genuine professional standing.
+**Step 3 — Get expert validation (optional)**
+Request review from a certified prescriber partner. They review and co-sign your document — giving it genuine professional standing and a named expert behind it.
 
-**Step 4 — Stay current**
-When the EU AI Act is updated, Trustixy automatically identifies which of your systems are affected and alerts you. Your registry stays current without manual monitoring.
+**Step 4 — Stay current automatically**
+When the EU AI Act is updated, Trustixy identifies which of your systems are affected and sends you an alert. Your registry stays current without manual monitoring.
 
 ---
 

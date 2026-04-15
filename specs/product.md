@@ -80,7 +80,18 @@ Cloud marketplace listings, embedded API for integrators, multi-regulation expan
 
 * Landing page
 * Signup / Login
-* Dashboard with compliance status
-* System detail page with classification history and obligations checklist
+* **Quick classification path** — value in under 3 minutes, no setup required
+* Dashboard with compliance status and contextual next action
+* System detail page — tabbed, one primary action above the fold
 * Document generation with disclaimer
-* Co-signature request flow (basic)
+* Co-signature request flow with partner directory fallback
+* Identification wizard (optional path)
+* Mobile-compatible for all critical flows
+
+## UX Principles
+
+* One primary action per screen
+* Value in under 3 minutes from signup
+* Progressive disclosure — advanced features revealed after first use
+* Never block, always guide — warnings help, hard blockers frustrate
+* Mobile-first for classification, obligations, and co-signature flows
