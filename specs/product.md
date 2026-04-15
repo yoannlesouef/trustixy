@@ -65,16 +65,31 @@ Trustixy integrates a lightweight human validation layer to bridge the gap betwe
 8. **Immutable Audit Log** — every action logged, exportable for regulatory submissions
 9. **Export** — versioned, signed PDF with full compliance trail
 
+## Revenue Models
+
+Trois modèles économiques, tous prescripteur-led. Trustixy est l'infrastructure ; le prescripteur possède la relation client.
+
+### Modèle 1 — Co-signature per acte (cabinets, consultants)
+Le prescripteur fixe le prix de chaque co-signature (€150–500). Trustixy prélève €25 par acte via Stripe Connect. Le prescripteur encaisse directement. Économie : 20 clients × 2 co-signatures × €300 = €12 000/an pour le prescripteur, €1 000/an pour Trustixy — mais scalable avec le réseau.
+
+### Modèle 2 — Licence fédération
+Contrat annuel unique avec une fédération professionnelle : €3 000–10 000/an selon le nombre de membres. La fédération distribue à ses membres (accès Pro automatique), Trustixy ne gère qu'un seul interlocuteur. Objectif : 5 fédérations an 1 = €25 000–40 000 ARR.
+
+### Modèle 3 — Licence intégrateur
+Abonnement €299–599/mois pour les ESN/SSII. La conformité devient une annexe standard du livrable projet (facturée au client). API incluse, white-label inclus. Objectif : 10 intégrateurs an 1 = €36 000–72 000 ARR.
+
+---
+
 ## Go-to-Market Strategy
 
 ### Phase 1 — Prescriber-led growth (B2B2B)
-Target accounting firms and IT integrators first. Co-signature is their primary value-add: Trustixy generates the document, the prescriber validates and signs it — creating a billable, defensible compliance deliverable.
+Activer les trois modèles en parallèle : cabinets comptables (Model 1), fédérations numériques (Model 2), intégrateurs AI (Model 3). Les prescripteurs font le commercial, Trustixy fournit l'outil et l'infrastructure de facturation.
 
 ### Phase 2 — Direct SME acquisition
-Once validated through prescribers, open a self-serve freemium funnel. Unsigned documents available on free/pro plans; co-signed documents require a prescriber partner.
+Une fois validé via les prescripteurs, ouvrir un funnel freemium self-serve. Documents sans signature disponibles sur les plans Free/Pro ; documents co-signés nécessitent un partenaire prescripteur.
 
 ### Phase 3 — Platform & marketplace
-Cloud marketplace listings, embedded API for integrators, multi-regulation expansion (GDPR, NIS2, AI Liability Directive).
+Listings marketplace cloud (AWS, Azure), API embarquée pour les intégrateurs, expansion multi-réglementations (GDPR, NIS2, AI Liability Directive).
 
 ## V1 Requirements
 

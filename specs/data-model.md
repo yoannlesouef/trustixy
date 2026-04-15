@@ -5,6 +5,8 @@
 * id (uuid)
 * name (text)
 * sector (text) — healthcare | finance | hr | legal | education | retail | manufacturing | public | other
+* plan (text) — free | pro | enterprise | federation_member | integrator — current subscription plan
+* parent_organization_id (uuid) — nullable; references organizations; set for federation members
 * wizard_completed_at (timestamp) — null until the identification wizard is completed
 * created_at (timestamp)
 
@@ -12,9 +14,11 @@
 
 * id (uuid)
 * organization_id (uuid) — the partner's own org
-* tier (text) — referral | reseller | embedded | group
-* white_label_config (jsonb) — logo, colors, custom domain
-* commission_rate (numeric)
+* tier (text) — per_act | federation | integrator | reseller
+* billing_model (text) — per_act | flat_fee | subscription — drives invoicing logic
+* cosignature_fee (numeric) — price per co-signature set by the prescriber (Model 1 only); shown to end user at request time
+* stripe_account_id (text) — Stripe Connect account for direct payouts (Model 1); null for other models
+* white_label_config (jsonb) — logo, colors, custom domain (reseller and integrator tiers)
 * status (text) — pending | active | suspended
 * is_certified (boolean) — derived from prescriber_certifications; true if a valid certification exists
 * created_at (timestamp)
@@ -40,6 +44,35 @@
 * invited_at (timestamp)
 * activated_at (timestamp)
 * status (text) — invited | active
+
+## federation_memberships
+
+* id (uuid)
+* federation_partner_id (uuid) — references partners (tier: federation)
+* member_organization_id (uuid) — references organizations
+* joined_at (timestamp)
+* plan_granted (text) — plan automatically assigned to the member (typically pro)
+
+## integrator_projects
+
+* id (uuid)
+* integrator_partner_id (uuid) — references partners (tier: integrator)
+* client_organization_id (uuid) — references organizations
+* project_name (text)
+* report_generated_at (timestamp) — nullable; set when the compliance report PDF is generated
+* created_at (timestamp)
+
+## cosignature_transactions
+
+* id (uuid)
+* document_signature_id (uuid) — references document_signatures
+* partner_id (uuid)
+* client_organization_id (uuid)
+* amount (numeric) — total charged to client (prescriber's cosignature_fee)
+* trustixy_commission (numeric) — amount retained by Trustixy (fixed per-act fee)
+* stripe_transfer_id (text) — Stripe Connect transfer reference
+* status (text) — pending | completed | refunded
+* created_at (timestamp)
 
 ## users
 

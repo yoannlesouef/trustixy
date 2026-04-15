@@ -86,20 +86,101 @@ This document defines precisely what you confirm when you co-sign — and what y
 
 You will receive a response within 48 hours. Once approved, you receive access to the Partner Portal and your partner agreement to sign.
 
-### Choose your tier
+### Choisir votre modèle économique
 
-| Tier | Best for | Revenue share | Co-signature |
+Trois modèles sont disponibles — choisissez celui qui correspond à votre pratique :
+
+**Co-signature per acte** *(pour les cabinets et consultants)*
+Vous fixez votre propre tarif de co-signature (recommandé : €150–400 selon le niveau de risque du système). Vos clients le voient au moment de leur demande. Vous encaissez directement via Stripe Connect — Trustixy prélève €25 par acte. Aucun abonnement requis.
+
+- Idéal si vous avez un portefeuille de clients actif et souhaitez facturer à la prestation
+- Revenu direct et immédiat sur chaque co-signature réalisée
+
+**Licence fédération** *(pour les fédérations professionnelles et syndicats)*
+Un contrat annuel Trustixy vous donne accès à une organisation parente avec N organisations membres. Vous distribuez les accès à vos membres, qui bénéficient du plan Pro automatiquement.
+
+- Idéal si vous êtes une fédération, un syndicat, ou un ordre professionnel
+- Un seul contrat, une seule facturation, zéro gestion individuelle
+
+**Licence intégrateur** *(pour les ESN/SSII et intégrateurs AI)*
+Un abonnement mensuel (€299–599/mois) avec usage illimité et accès à l'API. Le rapport de conformité Trustixy est généré en white-label depuis votre portal et intégré dans vos livrables projet.
+
+- Idéal si vous livrez des projets AI et souhaitez bundler la conformité dans votre offre
+- Vous facturez la conformité à votre client dans votre devis projet — à votre propre tarif
+
+| Modèle | Pour qui | Coût Trustixy | Revenu prescripteur |
 |---|---|---|---|
-| **Referral** | Firms that want to recommend without reselling | 20% first-year MRR | Optional |
-| **Reseller** | Firms delivering compliance as a service under their brand | 30% recurring MRR | Recommended |
-| **Embedded** | IT integrators wanting API-level integration | Custom | Required for co-signed tier |
-| **Group** | Federations distributing to members | Flat fee | Optional |
+| **Per acte** | Cabinets, consultants | €25/co-signature | Tarif libre × volume |
+| **Fédération** | Fédérations, syndicats | €3 000–10 000/an | Distribution membres |
+| **Intégrateur** | ESN/SSII | €299–599/mois | Margin projet libre |
+| **Reseller** | Grands cabinets | 30% MRR récurrent | Commission abonnement |
 
 ---
 
-## 3. Setting Up Your Partner Portal
+## 3. Configuring Your Billing (Per-act Model)
 
-### White-label configuration (Reseller and above)
+If you chose the per-act model, configure your Stripe Connect account to receive payouts directly.
+
+### Connect your Stripe account
+1. In the Partner Portal, go to **Settings → Billing**
+2. Click **Connect Stripe account**
+3. Complete the Stripe Connect onboarding (takes ~5 minutes — legal identity + bank account)
+4. Once connected, set your **co-signature fee** (the amount your clients will be charged per co-signature request)
+
+### Set your co-signature fee
+- Recommended range: €150–400 depending on the system's risk level
+- The fee is displayed to your client when they request your review
+- Trustixy deducts €25 from each transaction — you receive the remainder automatically
+- You can update your fee at any time; it applies to future requests only
+
+### View your transaction history
+Go to **Billing → Transactions** to see all co-signature transactions: document, client, amount charged, Trustixy commission, and payout status.
+
+---
+
+## 3b. Managing Federation Members (Federation Model)
+
+If you are a federation or professional association, manage your members from the Federation Portal.
+
+### Add a member organization
+1. Go to **Members → Add member**
+2. Enter the member organization's name and admin email
+3. The member receives an invitation to create their Trustixy account
+4. On activation, they automatically receive the **Pro plan** under your federation license
+
+### Federation compliance dashboard
+The **Members** tab shows an aggregate view of compliance health across all your members: number of systems by status, active alerts, obligation completion rate. Use this to identify members who need support.
+
+### Co-signing for members
+If your federation has a certified prescriber, you can co-sign compliance documents for your members directly from your portal — same workflow as for individual clients.
+
+---
+
+## 3c. Managing Projects (Integrator Model)
+
+If you are an IT integrator or ESN/SSII, manage compliance as a project deliverable.
+
+### Create a client project
+1. Go to **Projects → New project**
+2. Enter the project name and link it to a client organization (or create a new one)
+3. The client organization gets access to Trustixy with Pro plan included in your license
+
+### Generate a compliance report
+Once the client has classified their AI systems:
+1. Open the project and click **Generate compliance report**
+2. The report is generated as a white-labeled PDF (your firm's logo and branding)
+3. Download and include it in your project deliverables
+
+The report includes: all registered AI systems, risk levels, obligation completion status, classification history, and regulatory version in effect.
+
+### API access
+Your integrator license includes API access. Use the `/integrator/projects` endpoints to automate report generation from your own project management tools. See the API documentation for details.
+
+---
+
+## 4. Setting Up Your Partner Portal
+
+### White-label configuration (Reseller and Integrator tiers)
 1. In the Partner Portal, go to **Settings → Branding**
 2. Upload your firm logo
 3. Set your primary brand color

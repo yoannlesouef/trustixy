@@ -89,12 +89,23 @@ You build and deploy AI systems for your clients. You're already accountable for
 **Industry federations and trade associations**
 Your members are SMEs trying to navigate a new regulation. A group Trustixy license gives them access to a practical compliance tool — and positions your federation as proactive on AI governance.
 
+**Three ways to work with Trustixy:**
+
+**Co-signature per act** *(cabinets, consultants)*
+Vous fixez votre prix de co-signature. Vos clients le voient au moment de leur demande. Vous encaissez directement via Stripe — Trustixy prélève €25 par acte. Pas d'abonnement, pas de partage de marge.
+
+**Licence fédération** *(fédérations, syndicats, ordres)*
+Un contrat annuel unique donne à tous vos membres l'accès au plan Pro Trustixy, sous votre marque. Vous gérez la distribution, nous gérons la plateforme.
+
+**Licence intégrateur** *(ESN/SSII, intégrateurs AI)*
+Un abonnement mensuel avec usage illimité et API. Le rapport de conformité Trustixy devient une annexe standard de vos livrables projet — facturée à votre client, à votre prix.
+
 **What you get as a partner:**
 
-- **Your own white-labeled portal** — clients see your brand, not Trustixy's (Reseller tier and above)
+- **Your own white-labeled portal** — clients see your brand, not Trustixy's (Reseller and Integrator tiers)
 - **Co-signature workflow** — review and professionally endorse compliance documents from your partner portal
 - **Client management dashboard** — see the compliance health of all your clients at a glance
-- **Recurring commission** — 20% to 30% of MRR from every client you refer or manage
+- **Direct billing** — set your own co-signature fee; Trustixy handles the payment infrastructure (Stripe Connect)
 - **Certification program** — a 15-minute scope acceptance or a 90-minute full certification, your choice
 - **Marketing assets** — pitch deck, client one-pager, partner badge for your website
 
@@ -148,6 +159,8 @@ All data is scoped to your organization. No system information is shared across 
 
 **Section title:** Start free. Scale when you need to.
 
+**Pour les organisations**
+
 | Plan | Price | Systems | Features |
 |---|---|---|---|
 | Free | €0/month | Up to 3 | Registry, classification, document with disclaimer |
@@ -156,7 +169,16 @@ All data is scoped to your organization. No system information is shared across 
 
 All plans include the full audit trail and regulatory alert engine.
 
+**Pour les prescripteurs**
+
+| Modèle | Pour qui | Coût Trustixy | Ce que vous gagnez |
+|---|---|---|---|
+| Co-signature per acte | Cabinets, consultants | €25/acte (commission) | Votre tarif × volume — vous encaissez directement |
+| Licence fédération | Fédérations, syndicats | €3 000–10 000/an | Distribution à tous vos membres, zéro friction |
+| Licence intégrateur | ESN/SSII, intégrateurs | €299–599/mois | Rapport conformité dans chaque livrable projet |
+
 **CTA:** Start free — no credit card required
+**CTA prescripteur:** Choisir mon modèle partenaire →
 
 ---
 

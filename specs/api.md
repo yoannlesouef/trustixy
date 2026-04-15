@@ -97,5 +97,26 @@ GET    /partners/:id/signature-requests/:did    — review a specific document b
 ## Organizations
 
 POST   /organizations                           — create organization (on signup)
-GET    /organizations/:id                       — get organization details (includes sector, wizard_completed_at)
+GET    /organizations/:id                       — get organization details (includes sector, plan, wizard_completed_at)
 PUT    /organizations/:id                       — update organization (sector, name)
+
+## Partner Billing (Model 1 — Per-act Co-signature)
+
+PUT    /partners/:id/billing                    — set cosignature_fee and connect Stripe account
+GET    /partners/:id/billing/transactions       — list co-signature transactions with amounts and commission
+POST   /partners/:id/billing/stripe-connect     — initiate Stripe Connect onboarding flow
+
+## Federations (Model 2 — Licence Fédération)
+
+POST   /federations/:id/members                 — add a member organization (grants federation_member plan)
+GET    /federations/:id/members                 — list member organizations with compliance health
+DELETE /federations/:id/members/:orgId          — remove a member organization
+GET    /federations/:id/compliance-summary      — aggregate compliance health across all members (count by status, alert count)
+
+## Integrator Projects (Model 3 — Licence Intégrateur)
+
+POST   /integrator/projects                     — create a client project (links integrator partner to client org)
+GET    /integrator/projects                     — list all projects with compliance status
+GET    /integrator/projects/:id                 — project details + compliance summary
+POST   /integrator/projects/:id/report          — generate PDF compliance report for the project (white-labeled)
+GET    /integrator/projects/:id/report          — retrieve the latest generated report

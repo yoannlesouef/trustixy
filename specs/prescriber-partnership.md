@@ -106,26 +106,98 @@ Co-signature is the primary reason prescribers have a recurring role (not just o
 
 ---
 
+## Revenue Models
+
+Three economic models, all prescriber-led. Trustixy is the infrastructure; the prescriber owns the client relationship and commercial negotiation.
+
+---
+
+### Model 1 — Co-signature per acte (cabinets comptables, avocats, consultants)
+
+Le prescripteur fixe lui-même le prix de chaque co-signature (€150–500 selon la complexité du système, le niveau de risque, et la taille du client). Trustixy prélève une commission fixe par acte signé.
+
+**Mécanique :**
+- Le prescripteur configure son tarif de co-signature dans son portal (champ `cosignature_fee`)
+- Le client voit le tarif lors de sa demande de co-signature
+- Le paiement transite via Stripe Connect : le prescripteur reçoit directement, Trustixy prélève €25 de commission par acte
+- Le prescripteur gère sa propre facturation client
+
+**Économie prescripteur :**
+- 20 clients × 2 co-signatures/an × €300 = €12 000/an de CA co-signature
+- Trustixy prélève €25 × 40 actes = €1 000/an
+- Le prescripteur garde ~€11 000/an sans aucun coût d'acquisition
+
+**Profils ciblés :** cabinets comptables, cabinets d'avocats, consultants indépendants
+
+---
+
+### Model 2 — Licence fédération (fédérations professionnelles, syndicats, ordres)
+
+Un contrat annuel unique avec la fédération donne accès à tous ses membres. La fédération distribue, supporte, et promeut Trustixy auprès de ses membres — Trustixy n'a qu'un seul interlocuteur.
+
+**Mécanique :**
+- Contrat annuel : €3 000–10 000/an selon le nombre de membres (tranches : <100, 100–500, 500+)
+- La fédération devient une organisation parente (`parent_organization_id`) — ses membres sont des organisations enfants avec accès automatique au plan Pro
+- Co-branding optionnel : "Trustixy, recommandé par [Fédération]"
+- La fédération accède à un tableau de bord de conformité agrégé pour l'ensemble de ses membres
+- La fédération peut co-signer les documents de ses membres si elle dispose d'une certification prescripteur
+
+**Économie :**
+- Un contrat fédération 300 membres = €6 000/an (€20/membre) vs €49/mois × 300 membres = €176 400/an en acquisition directe
+- Moins rentable par membre, mais zéro coût d'acquisition et zéro support individuel
+- Objectif : 5 fédérations à l'an 1 = €25 000–40 000 ARR
+
+**Profils ciblés :** MEDEF, CPME, syndicats sectoriels (numérique, santé, finance), ordres professionnels
+
+---
+
+### Model 3 — Licence intégrateur (ESN/SSII, intégrateurs AI)
+
+Les intégrateurs livrent des projets AI à leurs clients. La conformité EU AI Act devient une annexe standard du livrable projet — facturée au client dans le budget projet, pas comme abonnement SaaS.
+
+**Mécanique :**
+- Abonnement intégrateur : €299–599/mois, usage illimité pour tous leurs projets clients
+- L'intégrateur crée des projets clients (`integrator_projects`) ; chaque projet génère un rapport de conformité Trustixy exportable en PDF
+- API légère : le rapport peut être généré depuis l'outil de gestion de projet de l'intégrateur
+- Le rapport sort sous la marque de l'intégrateur (white-label inclus dans la licence)
+- L'intégrateur facture la conformité à son client dans son devis (€500–2 000 par projet) — Trustixy ne voit pas cette marge
+
+**Économie intégrateur :**
+- Abonnement Trustixy : €3 600–7 200/an
+- Facturation conformité client : €500–2 000 × nombre de projets/an
+- ROI positif dès 3–5 projets/an
+
+**Économie Trustixy :**
+- Revenu récurrent et indépendant du churn client final
+- L'intégrateur fait 100% du commercial et de la relation client
+- Objectif : 10 intégrateurs à l'an 1 = €36 000–72 000 ARR
+
+**Profils ciblés :** ESN/SSII délivrant des projets AI, agences de transformation digitale, cabinets de conseil IT
+
+---
+
 ## Partnership Tiers
 
-| Tier | Profile | Model | Revenue Share | Co-signature |
+| Tier | Profil | Modèle économique | Revenu Trustixy | Co-signature |
 |---|---|---|---|---|
-| **Referral** | Accounting firms, consultants | Send leads, earn commission | 20% first year MRR | Optional |
-| **Reseller** | Law firms, IT integrators | Sell under own brand | 30% recurring MRR | Recommended (billable) |
-| **Embedded** | ESN/SSII, cloud vendors | API integration | Custom | Required for co-signed tier |
-| **Group** | Federations, associations | Group license | Flat fee | Optional |
+| **Per-act** | Cabinets, consultants | Commission €25/acte via Stripe Connect | Variable selon volume | Cœur du modèle |
+| **Fédération** | Fédérations, syndicats | Licence annuelle forfaitaire | €3 000–10 000/contrat | Optionnelle |
+| **Intégrateur** | ESN/SSII, intégrateurs | Abonnement mensuel + API | €299–599/mois | Incluse dans livrable |
+| **Reseller** | Grands cabinets | Revente sous leur marque | 30% MRR récurrent | Recommandée |
 
 ---
 
 ## What Prescribers Get
 
-- **Revenue share** on referred or resold accounts
-- **Co-signature queue** in the partner portal — pending documents waiting for review
-- **Co-branding / white-label** options (Reseller+ tiers)
-- **Partner portal** with client compliance health dashboard
-- **Dedicated onboarding** support for their clients
-- **Marketing assets** (pitch decks, one-pagers, email templates)
-- **Partner badge** ("EU AI Act Certified Partner")
+- **Autonomie tarifaire** — le prescripteur fixe le prix de ses co-signatures (Model 1) ou l'intègre dans ses projets (Model 3)
+- **Stripe Connect** — encaissement direct sans passer par Trustixy (Model 1)
+- **Co-signature queue** dans le portal — documents en attente de validation
+- **Co-branding / white-label** — selon le tier
+- **Portal partenaire** avec dashboard de santé de conformité par client
+- **Dashboard fédération** — vue agrégée de conformité de tous les membres (Model 2)
+- **API projet** — génération de rapports depuis leur outillage (Model 3)
+- **Marketing assets** (pitch deck, one-pager, badge partenaire)
+- **Certification programme** — pour valider leur capacité à co-signer
 
 ---
 
@@ -224,23 +296,27 @@ The prescriber assumes professional responsibility for their review, consistent 
 
 ## Success Metrics
 
-| Metric | Target (6 months) |
+| Métrique | Cible an 1 |
 |---|---|
-| Active prescriber partners | 10 |
-| Clients acquired via prescribers | 50 |
-| % of new MRR from partner channel | >60% |
-| Co-signature adoption rate | >40% of documents |
-| Partner NPS | >40 |
+| Partenaires per-act actifs | 15 |
+| Fédérations sous contrat | 5 |
+| Intégrateurs sous licence | 10 |
+| Organisations acquises via prescripteurs | 200 |
+| % du revenu total via canal prescripteur | >70% |
+| Taux d'adoption co-signature | >40% des documents |
+| Volume actes co-signés / mois (an 1 fin) | >100 |
+| ARR canal prescripteur | >€120 000 |
 
 ---
 
 ## Risks & Mitigations
 
-| Risk | Mitigation |
+| Risque | Mitigation |
 |---|---|
-| Partners don't actively push the product | Provide ready-to-use sales materials; align incentives with recurring commission |
-| Partners reluctant to co-sign (liability fear) | Clearly scope co-signature responsibility in partner agreement; frame as professional review, not legal guarantee |
-| Partner sales cycle is long | Prioritize firms with existing compliance advisory practice |
-| White-label dilutes Trustixy brand | Limit white-label to Reseller tier |
-| Partners build competing products | Non-compete clause in partnership agreements |
-| Co-signature creates bottleneck for end users | Make co-signature optional; unsigned documents remain usable with prominent disclaimer |
+| Partenaires peu actifs commercialement | Assets marketing clé-en-main + commission directe sur actes (revenu immédiat visible) |
+| Réticence à co-signer (peur de la responsabilité) | Scope document explicite, deux niveaux de certification, notes professionnelles pour cadrer la revue |
+| Cycle de vente long pour les fédérations | Démarrer avec les associations numériques (TECH IN France, Syntec Numérique) — sensibilisées EU AI Act |
+| Prix co-signature trop bas fixé par le prescripteur | Fournir une grille tarifaire recommandée dans les assets marketing |
+| Intégrateurs ne renouvellent pas leur licence | Rattacher la valeur au rapport de livrable projet — non-renouvellement = perte d'un avantage concurrentiel |
+| White-label dilue la marque Trustixy | Limiter le white-label au tier Reseller et Intégrateur |
+| Co-signature crée un goulot d'étranglement | Co-signature optionnelle — documents avec disclaimer toujours téléchargeables |

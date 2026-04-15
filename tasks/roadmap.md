@@ -80,19 +80,33 @@
 
 **Week 10**
 * Partner directory: searchable list of certified partners, filterable by sector
-* Partner application flow + tier selection + agreement acceptance → redirect to Level 1 cert
+* Partner application flow + tier selection (per_act | federation | integrator | reseller) + agreement acceptance → redirect to Level 1 cert
 * Partner API endpoints
 
 **Week 11**
 * Partner portal UI: compliance health summary, signature queue, invite client
+* **Model 1 — Per-act billing**:
+  * `cosignature_fee` field on partner profile (prescriber sets their price)
+  * Stripe Connect onboarding flow for prescribers
+  * `cosignature_transactions` table + transaction history dashboard
+  * End-user sees prescriber's fee at co-signature request time
 * Branded onboarding email for invited clients
 * Certification renewal flow (20-min module + 5-question quiz)
 * Expiry reminder email at 60 days; in-app banner (non-blocking) when expired
 
 **Week 12**
-* White-label settings (logo, colors, custom domain)
-* Commission tracking dashboard
-* End-to-end test: partner onboarding → Level 1 cert → client invitation → co-signature with professional notes
+* **Model 2 — Licence fédération**:
+  * `federation_memberships` table
+  * `parent_organization_id` on organizations (federation member plan)
+  * Federation partner portal: aggregate compliance dashboard for all members
+  * Auto-grant Pro plan to federation members on join
+* **Model 3 — Licence intégrateur**:
+  * `integrator_projects` table
+  * Integrator portal: project list, per-project compliance report
+  * White-labeled PDF report generation (project delivery template)
+  * API endpoints: `/integrator/projects` + `/integrator/projects/:id/report`
+* White-label settings (logo, colors, custom domain) for Reseller and Integrator tiers
+* End-to-end test: per-act co-signature with Stripe payout + federation member onboarding + integrator project report
 
 ---
 
