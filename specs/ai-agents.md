@@ -84,7 +84,7 @@ A set of AI agents runs behind the scenes to help the Trustixy administrator gro
 ### Inputs
 - Application logs and error tracking
 - Supabase metrics
-- LLM API usage and cost data
+- Claude API usage and cost data
 
 ### Outputs
 - Instant alert on critical failure (API down, LLM unavailable)
@@ -135,9 +135,13 @@ A set of AI agents runs behind the scenes to help the Trustixy administrator gro
 
 ### What it does
 - Monitors official EU sources, legal blogs, and news for EU AI Act updates (new guidelines, deadlines, enforcement news)
-- Summarizes relevant changes and assesses their impact on Trustixy features or LLM prompts
-- Flags when classification logic or compliance document templates may need updating
-- Generates a monthly regulatory briefing for the admin and optionally for partners
+- Summarizes relevant changes and assesses their impact on registered AI systems
+- Runs the regulatory impact assessment prompt (see `specs/llm-prompts.md`) against each registered system to determine which are affected
+- Creates a new `regulatory_version` entry for each confirmed update
+- Auto-creates `compliance_alerts` for affected organizations and systems (sets `source_agent_log_id`)
+- Auto-sets affected systems to `needs_review`
+- Flags when classification prompts or compliance document templates may need updating
+- Generates a weekly regulatory briefing for the admin, optionally forwarded to partners
 
 ### Triggers
 - Runs weekly
@@ -145,16 +149,20 @@ A set of AI agents runs behind the scenes to help the Trustixy administrator gro
 ### Inputs
 - RSS feeds and web sources for EU AI Act news
 - Current LLM prompts from `specs/llm-prompts.md`
-- Current feature set
+- All active AI systems from the database (for impact assessment)
+- Current `regulatory_versions` table (to detect new updates)
 
 ### Outputs
-- Weekly regulatory update summary (plain language, impact assessment)
-- Alert when a change requires product action
-- Draft update to LLM prompts or compliance templates for admin review
+- New `regulatory_version` entry if a meaningful update is detected
+- `compliance_alerts` created for each affected system (linked via `source_agent_log_id`)
+- Affected systems set to `needs_review` with `compliance_status` update
+- Weekly regulatory briefing (plain language, impact assessment) for admin review
+- Draft updates to LLM prompts or compliance templates when required
 
 ### Admin interaction
-- Admin reviews regulatory summaries and decides on product actions
+- Admin reviews regulatory summaries and decides on product/prompt actions
 - Admin can forward the briefing to partners as a value-add communication
+- Admin approves any proposed changes to LLM prompts before they are applied
 
 ---
 
@@ -180,16 +188,6 @@ A set of AI agents runs behind the scenes to help the Trustixy administrator gro
 
 ---
 
-## Agent Data Model Addition
+## Agent Data Model
 
-```
-agent_logs
-  id (uuid)
-  agent_name (text)
-  run_at (timestamp)
-  status (text)          — success | warning | error
-  summary (text)
-  output (jsonb)
-  admin_action (text)    — approved | dismissed | snoozed | null
-  acted_at (timestamp)
-```
+The `agent_logs` table is defined in `specs/data-model.md`. The `compliance_alerts` table includes a `source_agent_log_id` foreign key to trace which agent run triggered each alert — providing full auditability of automated compliance decisions.

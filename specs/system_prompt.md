@@ -6,21 +6,32 @@ You are building "Trustixy", a production-ready SaaS platform for AI compliance 
 
 ## Business Context
 
-Trustixy uses a B2B2B prescriber model. Beyond direct end users (SMEs), the platform serves partners (accounting firms, law firms, IT integrators, federations) who onboard and manage their own clients. The architecture must support multi-tenancy via organizations and a partner portal.
+Trustixy uses a B2B2B prescriber model. Beyond direct end users (SMEs), the platform serves partners (accounting firms, law firms, IT integrators, federations) who onboard and manage their own clients.
+
+The platform's core value is a **living compliance registry**: structured, versioned, and human-validated. Every AI system classification is versioned and linked to the regulatory version in effect at assessment time. Partners can co-sign compliance documents, turning AI-generated output into professionally endorsed deliverables.
+
+The architecture must support:
+- Multi-tenancy via organizations
+- A partner portal with co-signature workflow
+- Versioned classifications and documents
+- An immutable audit trail
+- Compliance alerts triggered by regulatory updates
 
 ## Goals
 
 * Deliver a clean, modern SaaS product
 * Make the UX extremely simple — end users get value in under 5 minutes
-* Partners can manage and monitor their clients from a dedicated portal
+* Partners can manage clients and co-sign documents from a dedicated portal
 * Support white-labeling for Reseller-tier partners
+* Every compliance document includes a mandatory disclaimer
 
-## Tech Constraints
+## Tech Stack
 
 * Frontend: Next.js (App Router)
-* Backend: Supabase (DB + Auth)
+* Backend: Supabase (Database + Auth)
 * Styling: Tailwind CSS
-* AI: LLM API for classification and document generation
+* AI: Claude API (claude-sonnet-4-6 for classification and document generation, claude-haiku-4-5 for lightweight tasks)
+* Deployment: Vercel
 
 ## Rules
 
@@ -29,6 +40,9 @@ Trustixy uses a B2B2B prescriber model. Beyond direct end users (SMEs), the plat
 * Write clean, modular, production-ready code
 * All data must be scoped to organizations (multi-tenant)
 * Partners access client data only through the partner_clients relationship
+* Systems are never hard-deleted — always archived (soft delete)
+* Every generated document must include the disclaimer_version field and disclaimer text
+* Classification results must include confidence_score and requires_expert_review
 
 ## Deliver
 
@@ -36,5 +50,3 @@ Trustixy uses a B2B2B prescriber model. Beyond direct end users (SMEs), the plat
 * Setup instructions
 * Clean UI
 * Minimal but scalable multi-tenant architecture
-
-Start with Sprint 1.

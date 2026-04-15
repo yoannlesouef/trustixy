@@ -1,5 +1,3 @@
-# Branding
-
 # Branding – Trustixy
 
 ## Name
@@ -24,9 +22,9 @@ AI Trust & Compliance Platform
 
 ## Taglines
 
-* "AI compliance in minutes"
-* "Your AI, compliant by design"
-* "The compliance platform your clients need" (partner-facing)
+* "AI compliance, by design" — primary product tagline
+* "Your AI, compliant by design" — brand sign-off
+* "The compliance platform your clients can sign" — partner-facing (highlights co-signature)
 
 ## Co-branding (Reseller & Embedded tiers)
 
@@ -34,4 +32,3 @@ AI Trust & Compliance Platform
 * Custom domain support (e.g. compliance.partnerfirm.com)
 * Primary color customizable; secondary colors follow partner brand
 * "Powered by Trustixy" badge optional per partner agreement
-
