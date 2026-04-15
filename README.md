@@ -2,7 +2,7 @@
 
 **AI Trust & Compliance, by design.**
 
-Trustixy is a SaaS platform that helps companies comply with the **EU AI Act** — not just once, but continuously. It provides a structured, versioned registry of AI systems, tracks every classification over time, alerts users when regulatory changes require re-assessment, and enables prescriber co-signature to give compliance documents genuine legal standing.
+Trustixy is a SaaS platform that helps companies comply with the **EU AI Act** — not just once, but continuously. It provides a structured, versioned registry of AI systems, tracks every classification over time, alerts users when regulatory changes require re-assessment, and enables prescriber co-signature to give compliance documents genuine professional standing.
 
 ---
 
@@ -45,52 +45,46 @@ Most teams solve this with a one-time PDF or a spreadsheet. That breaks the mome
 
 ---
 
-## Tech Stack
+## Go-to-Market Strategy
 
-* **Frontend:** Next.js (App Router)
-* **Backend:** Supabase (Database + Auth)
-* **Styling:** Tailwind CSS
-* **AI:** Claude API (claude-sonnet-4-6 for classification and document generation)
-* **Deployment:** Vercel
+Trustixy uses a **B2B2B prescriber model**. Prescribers distribute Trustixy to their SME clients and co-sign compliance documents — creating a recurring billable service for the prescriber and a professionally validated document for the end user. The prescriber owns the client relationship; Trustixy is the infrastructure.
+
+### Three prescriber revenue models
+
+| Model | For | Trustixy cost | Prescriber revenue |
+|---|---|---|---|
+| **Per-act co-signature** | Accounting firms, consultants | €25 commission/act | Prescriber sets their own fee (€150–500); direct Stripe payout |
+| **Federation license** | Professional federations, trade associations | €3 000–10 000/year | Distribute Pro access to all members under one contract |
+| **Integrator license** | IT integrators, ESN/SSII | €299–599/month | Bundle compliance into project deliverables at their own price |
+
+Full details: [`/specs/prescriber-partnership.md`](specs/prescriber-partnership.md)
 
 ---
 
-## Getting Started
+## Monetization
 
-### 1. Clone the repository
+**For organizations:**
+* **Free:** up to 3 AI systems, unsigned documents with disclaimer
+* **Pro:** unlimited systems, full alert history, co-signature requests, obligation tracking
+* **Enterprise:** org compliance report, API access, advanced audit export, SLA
 
-```bash
-git clone https://github.com/your-username/trustixy.git
-cd trustixy
-```
+**For prescribers:**
+* Per-act billing via Stripe Connect — no subscription required
+* Federation license — flat annual fee, members auto-provisioned on Pro
+* Integrator license — monthly subscription with API access and white-labeled reports
 
-### 2. Install dependencies
+---
 
-```bash
-npm install
-```
+## Roadmap
 
-### 3. Setup environment variables
+| Phase | Weeks | Key deliverables |
+|---|---|---|
+| Core Product | 1–5 | Registry, quick classification path, identification wizard, obligations checklist, document + disclaimer, audit trail |
+| Human Validation & Partners | 6–12 | Regulatory alerts, two-level prescriber certification, co-signature flow, per-act billing (Stripe Connect), federation and integrator models, partner portal |
+| AI Agents | 13–16 | Compliance Intelligence Tracker, Customer Success Assistant, Partner Success Monitor, Platform Guardian |
+| Scale | 17+ | Marketplace listings, embedded API, multi-regulation expansion, cloud integrations |
 
-Create a `.env.local` file:
-
-```env
-NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_key
-ANTHROPIC_API_KEY=your_anthropic_api_key
-```
-
-### 4. Setup database
-
-Run the SQL schema from `/specs/data-model.md` and seed the `regulatory_versions` table with the current EU AI Act version.
-
-### 5. Run the app
-
-```bash
-npm run dev
-```
-
-App available at `http://localhost:3000`
+Full details: [`/tasks/roadmap.md`](tasks/roadmap.md)
 
 ---
 
@@ -107,49 +101,18 @@ trustixy/
 
 ---
 
-## Go-to-Market Strategy
-
-Trustixy uses a **B2B2B prescriber model**. Prescribers (accounting firms, law firms, IT integrators) distribute Trustixy to their SME clients and co-sign compliance documents — creating a recurring billable service for the prescriber and a professionally validated document for the end user.
-
-| Prescriber | Core value |
-|---|---|
-| Accounting & audit firms | Billable compliance deliverable + co-signature fees |
-| Law firms | Delivery tool for AI compliance mandates |
-| IT integrators | Compliance add-on to AI project deliverables |
-| Industry federations | Practical tool for SME members |
-| Cloud & AI vendors | Marketplace compliance layer |
-
-**Partnership Tiers:** Referral (20% MRR) · Reseller (30% MRR, white-label) · Embedded (API, custom) · Group (flat fee)
-
-Full details: [`/specs/prescriber-partnership.md`](specs/prescriber-partnership.md)
-
----
-
-## Monetization
-
-* **Free:** up to 3 AI systems, unsigned documents with disclaimer
-* **Pro:** unlimited systems, full alert history, co-signature requests
-* **Enterprise:** org compliance report, API access, advanced audit export, SLA
-
----
-
-## Roadmap
-
-| Phase | Weeks | Key deliverables |
-|---|---|---|
-| Core Product | 1–4 | Registry, versioned classification, obligations checklist, document + disclaimer, audit trail |
-| Human Validation & Partners | 5–10 | Regulatory alerts, co-signature flow, partner portal |
-| AI Agents | 11–14 | Compliance Intelligence Tracker, Customer Success, Partner Monitor, Platform Guardian |
-| Scale | 15+ | Marketplace, embedded API, multi-regulation, cloud integrations |
-
-Full details: [`/tasks/roadmap.md`](tasks/roadmap.md)
-
----
-
 ## Documentation
 
 | Document | Audience | Location |
 |---|---|---|
+| Product definition | All | `specs/product.md` |
+| Features spec | All | `specs/features.md` |
+| Data model | Engineering | `specs/data-model.md` |
+| API spec | Engineering | `specs/api.md` |
+| UX spec | Design / Engineering | `specs/ux.md` |
+| LLM prompts | Engineering | `specs/llm-prompts.md` |
+| AI agents | Engineering | `specs/ai-agents.md` |
+| Prescriber partnership | Business | `specs/prescriber-partnership.md` |
 | Home page content | All | `specs/content/home.md` |
 | User guide — End User | SMEs, CTOs, legal teams | `specs/content/guide-end-user.md` |
 | User guide — Prescriber | Accounting firms, law firms, IT integrators | `specs/content/guide-prescriber.md` |
