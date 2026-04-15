@@ -57,19 +57,59 @@ When the EU AI Act is updated, Trustixy identifies which of your systems are aff
 
 ## Who It's For Section
 
-**Section title:** Built for three types of users.
+**Section title:** Built for two types of users.
 
-### SMEs and their teams
+### Companies using or building AI systems
 You use AI tools in your business — maybe without fully knowing which ones qualify as "AI systems" under the EU AI Act. Trustixy gives you a simple way to identify, assess, and document them, without needing legal expertise.
-**CTA:** Start free — up to 3 systems
+**CTA:** Start free — no credit card required
 
-### Accounting firms, law firms, and IT integrators
-Your clients ask you about AI compliance. Trustixy lets you deliver a structured, co-signed compliance report under your brand — as a billable service, with a partner commission on every account you bring in.
-**CTA:** Become a prescriber partner
+### Expert partners who advise on compliance
+You advise companies on regulatory obligations. Trustixy lets you deliver a structured, co-signed compliance report under your own brand — reducing your delivery time and creating a recurring billable service.
+**CTA:** Become a certified partner
 
-### IT teams building or deploying AI systems
-You're accountable for the AI systems you build. Trustixy gives your clients a compliance deliverable built into the project — and protects you from the liability of undocumented deployments.
-**CTA:** Explore the Embedded API
+---
+
+## Prescriber Partners Section
+
+**Section title:** Are you an expert partner?
+
+A prescriber partner is any professional who advises organizations on regulatory compliance and wants to deliver AI Act compliance as a service to their clients.
+
+**Who qualifies:**
+
+**Accounting and audit firms**
+You already advise your SME clients on GDPR, tax, and regulatory obligations. The EU AI Act is a natural extension — and a new billable deliverable. Trustixy generates the compliance document; you review, co-sign, and deliver it under your firm's name.
+
+**Law firms and legal consultants**
+Your clients ask you what the EU AI Act means for them. Trustixy gives you a structured tool to answer that question and produce a co-signed compliance assessment — faster than drafting from scratch, and with a clear professional scope.
+
+**IT integrators and software companies (ESN/SSII)**
+You build and deploy AI systems for your clients. You're already accountable for what you deliver. Bundling compliance documentation into your project deliverable protects you and adds value to your contracts.
+
+**Industry federations and trade associations**
+Your members are SMEs trying to navigate a new regulation. A group Trustixy license gives them access to a practical compliance tool — and positions your federation as proactive on AI governance.
+
+**What you get as a partner:**
+
+- **Your own white-labeled portal** — clients see your brand, not Trustixy's (Reseller tier and above)
+- **Co-signature workflow** — review and professionally endorse compliance documents from your partner portal
+- **Client management dashboard** — see the compliance health of all your clients at a glance
+- **Recurring commission** — 20% to 30% of MRR from every client you refer or manage
+- **Certification program** — a 15-minute scope acceptance or a 90-minute full certification, your choice
+- **Marketing assets** — pitch deck, client one-pager, partner badge for your website
+
+**How co-signature works:**
+1. Your client creates their AI system registry and generates a compliance document on Trustixy
+2. They request your review from inside the platform
+3. You receive a notification, review the classification and document in your portal
+4. You add your professional notes (optional) and co-sign
+5. The document is updated with your name, firm, and certification badge
+6. Your client downloads a PDF with your endorsement embedded
+
+Co-signature means you have reviewed the classification and applied your professional judgment — it is not a guarantee of full regulatory compliance. The scope is explicitly defined in the partner agreement.
+
+**CTA:** Apply to become a partner →
+**Secondary CTA:** Read the partner guide →
 
 ---
 
