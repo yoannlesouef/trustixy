@@ -4,6 +4,8 @@
 
 * id (uuid)
 * name (text)
+* sector (text) — healthcare | finance | hr | legal | education | retail | manufacturing | public | other
+* wizard_completed_at (timestamp) — null until the identification wizard is completed
 * created_at (timestamp)
 
 ## partners
@@ -14,6 +16,20 @@
 * white_label_config (jsonb) — logo, colors, custom domain
 * commission_rate (numeric)
 * status (text) — pending | active | suspended
+* is_certified (boolean) — derived from prescriber_certifications; true if a valid certification exists
+* created_at (timestamp)
+
+## prescriber_certifications
+
+* id (uuid)
+* partner_id (uuid)
+* certified_by_user_id (uuid) — the partner user who completed the certification
+* certification_version (text) — version of the certification content at time of completion
+* cosignature_scope_version (text) — version of the co-signature scope document accepted
+* score (integer) — quiz score (0–100)
+* certified_at (timestamp)
+* expires_at (timestamp) — certified_at + 12 months
+* renewed_at (timestamp) — nullable; set on renewal
 * created_at (timestamp)
 
 ## partner_clients
@@ -43,6 +59,10 @@
 * data_used (text)
 * autonomy_level (text)
 * owner (text)
+* sector (text) — inherited from organization, overridable per system
+* source (text) — wizard | manual — how the system was created
+* description_quality_score (integer) — 0–100; LLM-assessed description quality; null until first check
+* description_quality_feedback (text) — LLM suggestions to improve the description; null if quality sufficient
 * compliance_status (text) — unclassified | compliant | needs_review | at_risk
 * last_classified_at (timestamp)
 * last_reviewed_at (timestamp)
@@ -70,6 +90,7 @@
 * ai_system_id (uuid) — denormalized for easier querying
 * title (text)
 * description (text)
+* implementation_guide (text) — practical guidance on how to implement this obligation
 * regulatory_reference (text) — e.g. "EU AI Act Art. 13(1)"
 * status (text) — todo | in_progress | done
 * due_date (date) — optional
@@ -95,8 +116,10 @@
 * document_id (uuid)
 * signed_by_user_id (uuid) — the prescriber user who signed
 * partner_id (uuid) — the partner firm
+* certification_id (uuid) — the prescriber_certification active at time of signing
+* cosignature_scope_version (text) — version of the scope document accepted by this prescriber
 * action (text) — approved | changes_requested | declined
-* notes (text) — optional reviewer notes
+* professional_notes (text) — optional reviewer analysis, caveats, or comments; included in the document
 * acted_at (timestamp)
 * created_at (timestamp)
 
@@ -106,7 +129,7 @@
 * organization_id (uuid) — for org-level queries
 * ai_system_id (uuid) — nullable (some actions are org-level)
 * user_id (uuid)
-* action (text) — create | update | archive | classify | obligation_updated | generate_document | signature_requested | signature_approved | signature_declined | alert_acknowledged | alert_dismissed | status_changed
+* action (text) — create | update | archive | classify | obligation_updated | generate_document | signature_requested | signature_approved | signature_declined | alert_acknowledged | alert_dismissed | status_changed | wizard_completed | description_quality_checked | certification_completed | cosignature_scope_accepted
 * metadata (jsonb) — before/after state, confidence score, trigger type, etc.
 * created_at (timestamp)
 

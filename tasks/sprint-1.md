@@ -26,10 +26,26 @@ Deliver the core compliance registry: auth, AI systems CRUD, versioned classific
 * audit_logs (with organization_id)
 * regulatory_versions (seed with current version)
 
+### Identification Wizard
+* Sector selection (stored on organization)
+* Tool inventory checklist (categorized by sector — static list for V1)
+* Wizard Analysis LLM call: assess in-scope tools, return suggested systems with pre-filled descriptions
+* Results review screen: editable suggestions, out-of-scope tools collapsed
+* Batch system creation from confirmed wizard results
+* wizard_completed_at stored on organization
+* Wizard nudge on dashboard until completed
+
+### Description Quality Check
+* LLM quality check triggered on every system save
+* description_quality_score and description_quality_feedback stored on ai_system
+* Inline quality indicator on system page (green / orange)
+* Classification blocked with warning if score < 60
+
 ### AI Systems CRUD
 * Create / edit / archive (soft delete)
 * compliance_status auto-set to `unclassified` on creation
 * Status degrades to `needs_review` on description update
+* source field: wizard | manual
 
 ### Classification
 * 10-question questionnaire UI

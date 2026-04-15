@@ -129,17 +129,74 @@ Co-signature is the primary reason prescribers have a recurring role (not just o
 
 ---
 
+## Prescriber Certification Program
+
+Co-signature requires certification. Trustixy provides an in-app certification program that serves three purposes:
+1. Gives prescribers the knowledge to review and sign confidently
+2. Gives end users assurance that the co-signer is qualified
+3. Creates a defensible record that the prescriber was trained on the specific version of the regulation in effect at signing
+
+### Program structure
+* **Initial certification**: ~2 hours — 5 training modules + 20-question assessment (80% pass threshold)
+* **Renewal**: ~30 minutes — focused on regulatory changes since last certification; required every 12 months
+* **Certification badge**: displayed on all documents co-signed by a certified prescriber
+
+### Module topics
+1. EU AI Act overview — structure, timeline, key definitions
+2. Risk classification — criteria and examples by sector
+3. Obligations by risk level — what each level requires in practice
+4. How to review a Trustixy classification — what to verify, red flags to watch for
+5. Sector deep-dives — Healthcare, Finance, HR (user selects relevant ones)
+
+### Certification versioning
+* Each certification is linked to a `certification_version` reflecting the EU AI Act content at time of training
+* When the regulation changes significantly, a new certification version is issued and renewal is required
+* Documents display the certification version active at time of co-signature — providing full traceability
+
+---
+
+## Co-signature Scope Document
+
+Every prescriber reads and explicitly accepts the **Co-signature Scope Document** before their first co-signature. This document defines precisely what the prescriber confirms and what is excluded.
+
+### What the co-signature confirms
+1. The AI system description and use case appear accurate and complete
+2. The AI-generated classification is appropriate given the prescriber's professional judgment
+3. The listed obligations are applicable and complete
+4. The review was conducted with professional care consistent with the prescriber's advisory practice
+
+### What the co-signature explicitly does NOT cover
+* A guarantee that obligations have been or will be implemented by the organization
+* A legal opinion on the organization's full regulatory compliance posture
+* A replacement for the organization's own legal counsel
+* Liability for inaccurate information provided by the end user in their system description
+
+### Professional notes
+Prescribers can add a **Reviewer Comments** section to any document they co-sign. This is optional but strongly recommended for complex or high-risk systems. Notes may include:
+* Caveats about the system description's completeness
+* Sector-specific considerations not captured in the classification
+* Recommended follow-up actions beyond the obligations checklist
+* Scope limitations of the review
+
+Professional notes appear in the document and PDF export as a distinct "Reviewer Comments" section. They help document the exact scope of the review and protect the prescriber from over-reliance claims.
+
+### Scope document versioning
+The scope document is versioned (`cosignature_scope_version`). Prescribers must re-accept when it changes materially. All co-signatures are permanently linked to the scope version in effect at signing.
+
+---
+
 ## Co-signature Responsibilities
 
 By co-signing a Trustixy compliance document, the prescriber confirms that they have:
-1. Reviewed the AI system description and use case
-2. Verified the AI-generated classification is appropriate
-3. Validated that the listed obligations are complete and applicable
-4. Applied their professional judgment to the overall compliance assessment
+1. Completed Trustixy certification for the relevant regulatory version
+2. Read and accepted the Co-signature Scope Document
+3. Reviewed the AI system description and use case
+4. Verified the AI-generated classification is appropriate given their professional judgment
+5. Validated that the listed obligations are applicable and complete
 
 The prescriber assumes professional responsibility for their review, consistent with their existing professional liability framework (audit, legal, or technical advisory). Trustixy provides the tool and the AI-generated first draft; the prescriber provides the expert validation.
 
-This scope is defined explicitly in the partner agreement accepted during onboarding.
+**Important:** Prescribers should verify with their own professional indemnity insurer and/or professional association that co-signing AI-generated compliance documents falls within their covered practice scope before accepting their first co-signature request.
 
 ---
 

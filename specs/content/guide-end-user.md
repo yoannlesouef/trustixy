@@ -24,27 +24,60 @@ If your organization was invited by a prescriber partner, their name will appear
 
 ---
 
-## 2. Registering an AI System
+## 2. Identifying Your AI Systems (Wizard)
 
-An AI system is any software that uses AI to make or support decisions — a chatbot, a recommendation engine, a scoring model, an automated email classifier, etc.
+The first challenge most organizations face is simply knowing which tools they use that qualify as AI systems under the EU AI Act. Trustixy's identification wizard solves this.
 
-### Add a system
+### What counts as an AI system?
+Any software that uses AI to make or support decisions: a chatbot, a recommendation engine, a CV screening tool, a credit scoring model, a fraud detection system, an automated email classifier. If it uses machine learning or AI to produce outputs that influence decisions — it's likely in scope.
+
+### Running the wizard
+The wizard is triggered automatically after your first login. You can also access it anytime from the dashboard ("Discover your AI systems →").
+
+**Step 1 — Select your sector**
+Choose your primary sector. Trustixy uses this to filter the tool list to what's most relevant for you.
+
+**Step 2 — Check the tools you use**
+You'll see a categorized list of common AI-powered tools. Check everything your organization uses — even tools you're not sure about. Categories include productivity tools, customer service, HR, sales, and finance. There's also a free-text field for tools not in the list.
+
+**Step 3 — Review the analysis**
+Trustixy analyzes each tool you checked. For each one in scope of the EU AI Act, you'll see:
+- Why it's in scope
+- Its likely risk level
+- A pre-filled description you can edit
+
+Tools that are out of scope are listed separately with an explanation.
+
+**Step 4 — Confirm and create your registry**
+Review the pre-filled descriptions, edit as needed, and click **Create my registry**. All confirmed systems are added to your registry with status Unclassified.
+
+### Description quality
+When you save a system description, Trustixy checks its quality automatically. A good description enables an accurate classification — it should clearly explain what the system does, how it makes decisions, what data it uses, and whether humans can override its outputs.
+
+If the description is insufficient, you'll see an orange indicator with specific suggestions: "Please clarify whether personal data is processed" or "Specify how autonomous the system's decisions are." Classification is blocked until the quality score is sufficient — this protects you from getting a meaningless result.
+
+---
+
+## 3. Registering a System Manually
+
+If you want to add a system outside of the wizard:
+
 1. Click **Add system** on the dashboard
 2. Fill in the fields:
    - **Name** — a clear internal name (e.g. "Customer support chatbot")
-   - **Description** — what the system does in plain language
+   - **Description** — what the system does in plain language (quality check runs on save)
    - **Use case** — what business decision or process it supports
    - **Data used** — what types of data the system processes (personal, financial, behavioral, etc.)
    - **Autonomy level** — does the system make decisions automatically, or does a human always review?
    - **Owner** — the person or team responsible for this system
 3. Click **Save**
 
-The system is created with status **Unclassified**. You can now run a classification.
+The system is created with status **Unclassified**. If the description quality is insufficient, improve it before classifying.
 
 ### Edit or archive a system
 - Click the system name to open the system page
 - Use the edit icon to update any field
-- Updating the description automatically sets the status to **Needs Review** — the system should be re-classified after significant changes
+- Updating the description automatically sets the status to **Needs Review** — re-classify after significant changes
 - To remove a system, use **Archive**. Archived systems are never deleted — they remain in your audit trail.
 
 ---

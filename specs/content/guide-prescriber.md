@@ -29,7 +29,51 @@ Co-signature is a professional review, consistent with your existing advisory pr
 
 ---
 
-## 2. Becoming a Partner
+## 2. Getting Certified
+
+**Certification is required before you can co-sign any document.** This is not a formality — it ensures you have the knowledge to review classifications accurately, and it gives your co-signature genuine professional standing.
+
+### Why certification matters
+When you co-sign a Trustixy document, your name and firm are permanently embedded in it. Your clients and their auditors will rely on your endorsement. Certification ensures:
+- You understand the EU AI Act classification criteria well enough to validate an AI-generated assessment
+- You've accepted the co-signature scope document — you know exactly what you're and aren't confirming
+- Your co-signature carries a certification badge, visible in the document and PDF
+
+### How to certify
+1. From the Partner Portal, go to **Certification → Start certification**
+2. Read and accept the **Co-signature Scope Document** (see below)
+3. Complete the 5 training modules (~2 hours total):
+   - EU AI Act overview
+   - Risk classification criteria and examples
+   - Obligations by risk level
+   - How to review a Trustixy classification
+   - Sector deep-dives (select the ones relevant to your clients)
+4. Pass the final assessment (20 questions, 80% pass threshold)
+5. Your certification badge is active immediately
+
+Your certification is valid for 12 months. You'll receive a renewal reminder 60 days before expiry. Renewal takes ~30 minutes and focuses on what changed in the regulation since your last certification.
+
+### The Co-signature Scope Document
+This document defines precisely what you confirm when you co-sign — and what you don't. Read it carefully before accepting.
+
+**What you confirm:**
+- The system description appears accurate and complete
+- The AI-generated classification is appropriate given your professional judgment
+- The listed obligations are applicable and complete
+- Your review was conducted with professional care
+
+**What you do NOT confirm:**
+- That the obligations have been implemented
+- A full legal compliance opinion
+- Accuracy of information the client provided about their system
+
+**Before certifying**, we strongly recommend:
+- Checking with your professional indemnity insurer that co-signing AI-generated compliance documents falls within your covered practice
+- Reviewing the position of your professional association (Ordre des Experts-Comptables, Barreau, etc.) on AI-assisted compliance deliverables
+
+---
+
+## 3. Becoming a Partner
 
 ### Apply
 1. Go to trustixy.com and click **Become a partner**
@@ -115,14 +159,26 @@ You also receive an email notification for each new request.
    - Are all obligations listed and applicable?
    - Are there any risks or obligations the AI missed?
 
+### Adding professional notes (recommended)
+Before making your decision, you can add a **Reviewer Comments** section to the document. This is optional but strongly recommended for:
+- High-risk systems
+- Cases where the system description has gaps you've had to interpret
+- Situations where you want to document the limits of your review
+
+Your notes appear as a distinct "Reviewer Comments" section in the document and PDF. They protect you by documenting the exact scope of your review. Examples:
+- "The classification assumes the system is used for internal HR screening only. If deployed for external client decisions, re-classification is recommended."
+- "Risk level confirmed as Limited. Note: the organization should verify their chatbot provider's own EU AI Act compliance status."
+
 ### Your decision
 
 **Approve & Sign**
+- Add professional notes if relevant (optional)
 - Click **Approve & Sign**
-- Confirm your name and firm (pre-filled from your profile)
-- Your signature is embedded in the document: "[Name], [Firm] — reviewed and co-signed on [Date]"
+- Confirm your name, firm, and certification status (pre-filled)
+- Your signature is embedded: "[Name], [Firm], Certified AI Compliance Reviewer — co-signed on [Date]"
+- Professional notes (if written) appear as "Reviewer Comments" in the document
 - The client is notified immediately
-- The document status changes to **Co-signed** and a verified badge appears
+- The document status changes to **Co-signed** with your certification badge
 
 **Request Changes**
 - Click **Request Changes**

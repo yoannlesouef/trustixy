@@ -1,11 +1,22 @@
 # API
 
+## Identification Wizard
+
+POST   /wizard/analyze                          — submit tool checklist + sector; returns suggested systems with pre-filled descriptions and likely risk levels
+POST   /wizard/confirm                          — batch-create confirmed systems from wizard suggestions
+GET    /wizard/tool-catalog                     — list of known AI tools organized by category and sector
+
+## Description Quality
+
+POST   /ai-systems/:id/check-description        — run description quality LLM check; returns score and improvement suggestions
+                                                  (called automatically on save; can be re-triggered manually)
+
 ## AI Systems
 
-POST   /ai-systems                              — create a new AI system
+POST   /ai-systems                              — create a new AI system (triggers description quality check)
 GET    /ai-systems                              — list all systems with current compliance_status
 GET    /ai-systems/:id                          — get system details
-PUT    /ai-systems/:id                          — update system (auto-sets needs_review if description changed)
+PUT    /ai-systems/:id                          — update system (triggers description quality check + auto-sets needs_review if description changed)
 DELETE /ai-systems/:id                          — archive system (soft delete, preserves audit trail)
 
 ## Classification
@@ -16,7 +27,7 @@ GET    /ai-systems/:id/classifications/current  — latest classification with c
 
 ## Obligations
 
-GET    /ai-systems/:id/obligations              — current obligations checklist
+GET    /ai-systems/:id/obligations              — current obligations checklist (includes implementation_guide per item)
 PUT    /ai-systems/:id/obligations/:oid         — update obligation status (todo | in_progress | done)
 
 ## Compliance Status
@@ -35,7 +46,7 @@ GET    /ai-systems/:id/documents/:did           — get a specific historical do
 
 POST   /documents/:id/signature/request         — request co-signature from prescriber partner
 GET    /documents/:id/signature                 — get current signature status
-POST   /documents/:id/signature/approve         — prescriber approves and signs (partner portal)
+POST   /documents/:id/signature/approve         — prescriber approves and signs (with optional professional_notes)
 POST   /documents/:id/signature/request-changes — prescriber requests changes before signing
 POST   /documents/:id/signature/decline         — prescriber declines signing
 
@@ -57,10 +68,19 @@ GET    /ai-systems/:id/alerts                   — alerts specific to a system
 POST   /ai-systems/:id/alerts/:aid/acknowledge  — acknowledge an alert
 POST   /ai-systems/:id/alerts/:aid/dismiss      — dismiss an alert
 
+## Prescriber Certification
+
+GET    /partners/:id/certification              — get current certification status and expiry
+POST   /partners/:id/certification/start        — start the certification training module
+POST   /partners/:id/certification/complete     — submit quiz answers; returns pass/fail and score
+POST   /partners/:id/certification/renew        — start renewal (shorter module)
+GET    /partners/:id/cosignature-scope          — get the current co-signature scope document
+POST   /partners/:id/cosignature-scope/accept   — prescriber accepts the scope document (versioned)
+
 ## Partners
 
 POST   /partners                                — apply to become a partner
-GET    /partners/:id                            — get partner profile
+GET    /partners/:id                            — get partner profile (includes is_certified, certification expiry)
 PUT    /partners/:id                            — update white-label config, settings
 
 ## Partner Clients
@@ -71,11 +91,11 @@ DELETE /partners/:id/clients/:clientId          — remove a client
 
 ## Partner Co-signature Queue
 
-GET    /partners/:id/signature-requests         — list pending documents awaiting co-signature
+GET    /partners/:id/signature-requests         — list pending documents awaiting co-signature (blocked if not certified)
 GET    /partners/:id/signature-requests/:did    — review a specific document before signing
 
 ## Organizations
 
 POST   /organizations                           — create organization (on signup)
-GET    /organizations/:id                       — get organization details
-PUT    /organizations/:id                       — update organization
+GET    /organizations/:id                       — get organization details (includes sector, wizard_completed_at)
+PUT    /organizations/:id                       — update organization (sector, name)
