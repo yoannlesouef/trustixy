@@ -131,38 +131,79 @@ A set of AI agents runs behind the scenes to help the Trustixy administrator gro
 
 ## Agent 5 — Compliance Intelligence Tracker
 
-**Role:** Monitor EU AI Act regulatory developments and keep the product and documentation up to date.
+**Role:** Monitor EU AI Act regulatory developments, assess their impact on registered systems, and keep the platform up to date.
 
 ### What it does
-- Monitors official EU sources, legal blogs, and news for EU AI Act updates (new guidelines, deadlines, enforcement news)
-- Summarizes relevant changes and assesses their impact on registered AI systems
-- Runs the regulatory impact assessment prompt (see `specs/llm-prompts.md`) against each registered system to determine which are affected
-- Creates a new `regulatory_version` entry for each confirmed update
-- Auto-creates `compliance_alerts` for affected organizations and systems (sets `source_agent_log_id`)
+- Fetches and parses monitored sources (see Sources below)
+- Filters out noise: press opinions, political statements, and minor FAQs are ignored — only material regulatory changes trigger action
+- Summarizes confirmed changes in plain language and assesses their impact on registered AI systems
+- Runs the regulatory impact assessment LLM prompt (see `specs/llm-prompts.md`) against each active AI system to determine which are affected
+- Creates a new `regulatory_version` entry for each confirmed material update (pending admin approval before activation)
+- Auto-creates `compliance_alerts` for affected organizations and systems once a version is approved (sets `source_agent_log_id`)
 - Auto-sets affected systems to `needs_review`
 - Flags when classification prompts or compliance document templates may need updating
 - Generates a weekly regulatory briefing for the admin, optionally forwarded to partners
 
 ### Triggers
-- Runs weekly
+- Runs weekly (every Monday at 06:00 UTC)
+- Can be triggered manually by the admin for an on-demand scan
+
+### Sources monitored
+
+#### Primary sources (authoritative — trigger regulatory_version creation)
+- **EUR-Lex RSS feed** — official EU publications: delegated acts, implementing acts, corrigenda
+  - Feed: `https://eur-lex.europa.eu/tools/rss/RSS_EN.xml` filtered on AI Act identifiers
+- **European AI Office** — official guidelines, FAQ updates, enforcement decisions
+  - Site: `digital-strategy.ec.europa.eu/en/policies/ai-office`
+- **CEN/CENELEC** — harmonised technical standards for high-risk AI systems
+  - Monitored for new EN standards referencing the AI Act
+
+#### Secondary sources (informational — used for briefing only, not for regulatory_version creation)
+- **EDPB (European Data Protection Board)** — opinions on AI Act / GDPR intersection
+- **Bird & Bird** AI regulatory blog
+- **Fieldfisher** AI & data law updates
+- **Linklaters** digital regulation publications
+- **IAPP** (iapp.org) — AI compliance news
+- **AlgorithmWatch** (algorithmwatch.org)
+- **Politico Tech** — EU digital policy coverage
+
+#### Signal filters (what NOT to act on)
+- Press articles and journalist opinions
+- Political speeches or declarations without a published official text
+- Announcements of upcoming consultations (monitor but do not trigger)
+- Minor FAQ clarifications with no change to obligations or risk categories
+
+### Key regulatory deadlines (pre-seeded in regulatory_versions)
+
+| Date | Milestone | Impact |
+|---|---|---|
+| August 2024 | AI Act enters into force | Baseline version |
+| February 2025 | Prohibition on unacceptable-risk systems | Systems classified as Unacceptable must be flagged |
+| August 2025 | GPAI model obligations | General-purpose AI model providers |
+| August 2026 | High-risk obligations (Annex III) | Most SME-relevant high-risk systems |
+| August 2027 | High-risk obligations (Annex I) | Safety-component systems |
+
+These dates are encoded as `regulatory_versions` entries at platform launch. As each date approaches (90-day and 30-day warnings), the agent generates proactive alerts for organizations with affected systems.
 
 ### Inputs
-- RSS feeds and web sources for EU AI Act news
+- RSS feeds and web sources listed above
 - Current LLM prompts from `specs/llm-prompts.md`
 - All active AI systems from the database (for impact assessment)
-- Current `regulatory_versions` table (to detect new updates)
+- Current `regulatory_versions` table (to detect what is already known and avoid duplicates)
 
 ### Outputs
-- New `regulatory_version` entry if a meaningful update is detected
-- `compliance_alerts` created for each affected system (linked via `source_agent_log_id`)
-- Affected systems set to `needs_review` with `compliance_status` update
+- Draft `regulatory_version` entry submitted for admin approval (not yet active)
+- Once approved: `compliance_alerts` created for each affected system (linked via `source_agent_log_id`)
+- Affected systems set to `needs_review`
 - Weekly regulatory briefing (plain language, impact assessment) for admin review
-- Draft updates to LLM prompts or compliance templates when required
+- Draft updates to LLM prompts or compliance templates flagged for admin review
 
 ### Admin interaction
-- Admin reviews regulatory summaries and decides on product/prompt actions
+- Admin receives the weekly briefing with a summary of sources checked and findings
+- Admin reviews draft `regulatory_version` entries and approves, edits, or rejects before they activate
+- Admin approves any proposed LLM prompt changes before deployment
 - Admin can forward the briefing to partners as a value-add communication
-- Admin approves any proposed changes to LLM prompts before they are applied
+- Admin can trigger a manual scan from the admin dashboard
 
 ---
 
