@@ -1,45 +1,151 @@
 # LLM Prompts
 
-## 1. Wizard — AI System Identification
+---
+
+## 1. Agent Behavior Summary
+
+Used to generate a human-readable summary of an agent session for display in the session detail page and replay export.
+
+You are an AI audit analyst. Summarize the following agent session for a developer or security reviewer.
+
+### Session Context
+- Agent: {{agent_name}}
+- Framework: {{framework}}
+- Environment: {{environment}}
+- Duration: {{duration_ms}}ms
+- Total actions: {{total_actions}}
+- Human identity: {{human_identity}}
+
+### Action Summary
+{{action_summary_json}}
+(includes: action type counts, top affected resources, error actions, token usage)
+
+### Instructions
+Write a concise 3–5 sentence summary of what this agent session accomplished. Focus on:
+1. What the agent was doing (inferred from action types and affected resources)
+2. What resources it touched or modified
+3. Any errors or unusual patterns
+4. Overall outcome (completed successfully / errored / inconclusive)
+
+Tone: technical, direct. Audience: developer or security engineer reviewing the session.
+
+Return plain text only.
+
+---
+
+## 2. Anomaly Detection Assessment
+
+Used by the Anomaly Detection Agent to evaluate whether a session or action pattern warrants an anomaly record.
+
+You are a security analyst reviewing AI agent behavior. Assess the following session for anomalous activity.
+
+### Agent Profile
+- Agent: {{agent_name}}
+- Project: {{project_name}}
+- Baseline (past 30 days): {{baseline_json}}
+  (includes: avg actions/session, typical action type distribution, typical affected resource patterns)
+
+### Current Session
+- Actions: {{action_count}}
+- Action type distribution: {{type_distribution}}
+- Affected resources: {{affected_resources}}
+- Policy rules for this agent: {{policy_rules}}
+
+### Instructions
+Identify any anomalous patterns compared to the baseline and policy rules.
+
+Return a JSON array of detected anomalies (empty array if none):
+```json
+[
+  {
+    "type": "unexpected_scope | sensitive_file_access | policy_violation | volume_spike | error_rate_spike | exfiltration_pattern | unusual_shell_commands | custom",
+    "severity": "low | medium | high | critical",
+    "description": "Plain-language explanation of what was flagged.",
+    "evidence": {
+      "matched_pattern": "...",
+      "threshold": "...",
+      "comparison": "..."
+    }
+  }
+]
+```
+
+Only include anomalies with clear evidence. Do not flag minor deviations that are within normal variance. Err toward fewer, higher-confidence flags over many low-confidence ones.
+
+---
+
+## 3. Agent Behavior Pre-fill for Compliance Classification
+
+Used when promoting a discovered agent identity to the compliance registry to pre-fill the classification form from SDK behavioral data.
+
+You are an EU AI Act compliance expert. Based on the operational behavior data below, infer likely values for the EU AI Act classification questionnaire fields.
+
+### Agent Operational Data
+- Agent name: {{agent_name}}
+- Framework: {{framework}}
+- Total sessions analyzed: {{session_count}}
+- Action type distribution: {{type_distribution}}
+- Top affected resources: {{top_resources}}
+- Sample human identities: {{human_identities_sample}}
+- Environment: {{environment}}
+
+### Instructions
+Infer the most likely values for the following fields. Return a JSON object:
+```json
+{
+  "description": "Inferred description of what this agent does based on its observed actions.",
+  "use_case": "Primary business process or decision this agent supports.",
+  "autonomy_level": "full | supervised | advisory",
+  "data_used": "Types of data the agent likely processes based on resources accessed.",
+  "affected_population": "users | employees | customers | general_public | internal_only",
+  "deployment_scope": "public | internal",
+  "confidence": 0-100,
+  "notes": "Any caveats or fields where inference confidence is low."
+}
+```
+
+Be conservative: if the evidence is ambiguous, choose the more cautious inference and lower the confidence score. The compliance team will review and correct.
+
+---
+
+## 4. Wizard — AI System Identification
 
 You are an EU AI Act compliance expert. An organization has provided a list of tools they use. Identify which ones are likely AI systems under the EU AI Act and require compliance assessment.
 
 ### Organization Context
 - Sector: {{sector}}
-- Organization size: {{size}} — micro | small | medium
+- Organization size: {{size}}
 
 ### Tools Provided
 {{tools_list}}
 
 ### Instructions
-For each tool, assess whether it qualifies as an AI system under the EU AI Act definition (Article 3(1): "a machine-based system designed to operate with varying levels of autonomy, that may exhibit adaptiveness after deployment, and that, for explicit or implicit objectives, infers from the input it receives how to generate outputs such as predictions, content, recommendations, or decisions that can influence physical or virtual environments").
-
-For tools that qualify, provide a pre-filled system description the user can review and edit.
+For each tool, assess whether it qualifies as an AI system under the EU AI Act (Article 3(1)). For tools that qualify, provide a pre-filled system description.
 
 Return a JSON array:
 ```json
 [
   {
-    "tool_name": "Name of the tool",
+    "tool_name": "...",
     "in_scope": true,
-    "scope_reason": "Brief explanation of why it is or is not in scope",
+    "scope_reason": "...",
     "likely_risk_level": "minimal | limited | high | unacceptable",
-    "risk_reason": "Brief explanation of the likely risk level",
-    "suggested_name": "Suggested internal system name",
-    "suggested_description": "Pre-filled description of what this system does, suitable for classification",
-    "suggested_use_case": "Primary business decision or process it supports",
-    "suggested_data_used": "Types of data this system processes"
+    "risk_reason": "...",
+    "suggested_name": "...",
+    "suggested_description": "...",
+    "suggested_use_case": "...",
+    "suggested_data_used": "..."
   }
 ]
 ```
 
-Only include tools where `in_scope` is true or where there is genuine uncertainty. Do not include obviously out-of-scope tools (standard databases, non-AI SaaS, plain spreadsheets).
+Only include tools where `in_scope` is true or where there is genuine uncertainty.
 
 ---
 
-## 2. Description Quality Check
+## 5. Description Quality Check
 
-You are an EU AI Act compliance expert. Evaluate the quality of the following AI system description for the purpose of accurate EU AI Act risk classification.
+You are an EU AI Act compliance expert. Evaluate the quality of the following AI system description for accurate risk classification.
 
 ### System Description
 - Name: {{name}}
@@ -49,28 +155,25 @@ You are an EU AI Act compliance expert. Evaluate the quality of the following AI
 - Autonomy level: {{autonomy_level}}
 
 ### Instructions
-Assess whether this description provides enough information to classify the system accurately. A high-quality description clearly explains: what the system does, how it makes decisions, what data it uses, who is affected by its outputs, and whether humans can override its decisions.
+Assess whether this description provides enough information for accurate classification.
 
 Return a JSON object:
 ```json
 {
   "quality_score": 75,
   "is_sufficient": true,
-  "missing_elements": [
-    "It is unclear whether the system's decisions can be overridden by a human",
-    "The description does not specify whether personal data is involved"
-  ],
-  "improvement_suggestions": "Please clarify how autonomous the system is in its decisions and whether personal data (names, emails, financial data) is processed."
+  "missing_elements": ["..."],
+  "improvement_suggestions": "..."
 }
 ```
 
-`is_sufficient` is true if `quality_score` ≥ 60. Below 60, the system should display a warning before classification.
+`is_sufficient` is true if `quality_score` ≥ 60.
 
 ---
 
-## 3. Classification
+## 6. Classification
 
-You are an EU AI Act compliance expert. Analyze the following AI system and classify it according to the EU AI Act regulatory framework in effect as of {{regulatory_version_label}}.
+You are an EU AI Act compliance expert. Classify the following AI system under the EU AI Act as of {{regulatory_version_label}}.
 
 ### System Information
 - Name: {{name}}
@@ -83,35 +186,39 @@ You are an EU AI Act compliance expert. Analyze the following AI system and clas
 ### Questionnaire Answers
 {{questionnaire_answers}}
 
-### Instructions
-1. Classify the risk level: minimal | limited | high | unacceptable
-2. Provide a plain-language explanation of the classification (2–3 sentences, suitable for a non-legal audience)
-3. List all applicable obligations under the EU AI Act for this risk level and use case. For each obligation, include a practical implementation guide tailored to the system's sector and use case.
-4. Assess your confidence in this classification (0–100)
-5. Flag if expert review is recommended (confidence < 70 or sensitive sector: healthcare, law enforcement, education, employment, critical infrastructure, biometric identification)
+### SDK Evidence (if available)
+{{sdk_evidence_summary}}
+(action types observed, resource categories accessed, session frequency, environment)
 
-Return a JSON object with this exact structure:
+### Instructions
+1. Classify: minimal | limited | high | unacceptable
+2. Plain-language explanation (2–3 sentences)
+3. All applicable obligations with implementation guides
+4. Confidence score (0–100)
+5. Flag if expert review recommended
+
+Return:
 ```json
 {
   "risk_level": "minimal | limited | high | unacceptable",
-  "explanation": "Plain-language explanation of the classification and why.",
+  "explanation": "...",
   "obligations": [
     {
-      "title": "Short obligation title",
-      "description": "What the organization must do.",
-      "implementation_guide": "Concrete, practical steps to implement this obligation, tailored to the system's sector and use case.",
+      "title": "...",
+      "description": "...",
+      "implementation_guide": "...",
       "regulatory_reference": "EU AI Act Art. X(Y)"
     }
   ],
   "confidence_score": 85,
   "requires_expert_review": false,
-  "expert_review_reason": "Reason if requires_expert_review is true, otherwise null"
+  "expert_review_reason": null
 }
 ```
 
 ---
 
-## 4. Compliance Document
+## 7. Compliance Document
 
 You are an EU AI Act compliance expert. Generate a professional compliance document for the following AI system.
 
@@ -132,34 +239,35 @@ You are an EU AI Act compliance expert. Generate a professional compliance docum
 - Organization: {{organization_name}}
 
 ### Classification Result
-- Risk level: {{risk_level}}
-- Explanation: {{explanation}}
+{{classification_result}}
 
 ### Obligations
 {{obligations}}
 
-### Questionnaire Answers
-{{questionnaire_answers}}
+### SDK Evidence Trail (if available)
+{{sdk_evidence_summary}}
+(include in "Evidence" section: total sessions, action types, operational period, environments)
 
 ### Instructions
-Generate a structured compliance document with the following sections:
-1. **System Description** — what the system does and its purpose
+Generate a structured compliance document with sections:
+1. **System Description**
 2. **Risk Classification** — risk level, justification, regulatory basis
-3. **Applicable Obligations** — list of obligations with descriptions and implementation guidance
-4. **Risk Analysis** — identified risks related to the system's use case and sector
-5. **Mitigation Measures** — concrete measures to address each identified risk
-6. **Human Oversight** — how human oversight is ensured in practice
-7. **Compliance Status** — current state of obligation implementation
+3. **Applicable Obligations** — with implementation guidance
+4. **Risk Analysis**
+5. **Mitigation Measures**
+6. **Human Oversight**
+7. **Operational Evidence** — if SDK evidence is available: summary of observed operational behavior (sessions, action types, environments). If not available: "No operational telemetry linked. Evidence is based on self-declared system description."
+8. **Compliance Status**
 
-Tone: professional, structured, concise. Suitable for internal governance and potential regulatory review.
-Do NOT include a disclaimer section — it is added automatically by the platform.
-If a prescriber adds professional notes, they will be appended as a separate "Reviewer Comments" section — do not include that section.
+Tone: professional, structured, concise.
+Do NOT include a disclaimer section — added automatically.
+Do NOT include a "Reviewer Comments" section — added by prescriber on co-signature.
 
 ---
 
-## 5. Regulatory Impact Assessment
+## 8. Regulatory Impact Assessment
 
-You are an EU AI Act compliance expert. A new regulatory update has been published. Assess its impact on registered AI systems.
+You are an EU AI Act compliance expert. A regulatory update has been published. Assess its impact on a registered AI system.
 
 ### Regulatory Update
 - Version: {{new_version_label}}
@@ -174,13 +282,12 @@ You are an EU AI Act compliance expert. A new regulatory update has been publish
 - Last classified: {{last_classified_at}}
 
 ### Instructions
-Assess whether this regulatory update affects this system and requires re-classification or obligation review.
 
-Return a JSON object:
+Return:
 ```json
 {
   "affected": true,
-  "reason": "Why this system is or is not affected.",
+  "reason": "...",
   "recommended_action": "re-classify | review-obligations | no-action",
   "urgency": "immediate | within-30-days | informational"
 }

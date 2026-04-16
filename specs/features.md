@@ -1,80 +1,181 @@
 # Features
 
-## Quick Classification Path
+---
 
-The primary entry point for new users. No setup required. Delivers a classification result in under 3 minutes.
+## SDK Integration
 
-* Single input: system name
-* 5 essential questions (one at a time): description, affected population, human override, data types, deployment scope
-* Optional: 5 refinement questions — expand to improve confidence score (not required)
-* Immediate result: risk level + top 3 obligations
-* From result: generate document in one click, or save to registry
+The SDK is the entry point for all platform data. Installed once, it instruments every AI framework call automatically.
+
+* Supported frameworks: Anthropic SDK, OpenAI SDK, Vercel AI SDK, LangChain (JS + Python), LlamaIndex, CrewAI, Claude Code hooks, MCP server
+* One-line wrap: `trustixy.wrap(client, { project, agent })`
+* Zero behavior change — SDK is transparent to the underlying framework
+* Automatic session grouping (per process / per request context)
+* Configurable content capture: off by default (metadata only), opt-in for full content with redaction patterns
+* CLI for Claude Code hook integration
+* Self-hosted ingest endpoint available on Enterprise
+
+Full SDK reference: [`/specs/sdk.md`](sdk.md)
 
 ---
 
-## AI System Identification Wizard
+## Action Audit Log
 
-Optional path for users who want to discover all in-scope systems at once. Accessible from the empty state, dashboard, and "Add system" menu.
+The core data store. Every action taken by every agent, structured and immutable.
 
-### Step 1 — Sector + tools (single screen)
-* Sector selector (single-select, filters tool list immediately)
-* Categorized tool checklist filtered by sector:
-  * Productivity: Microsoft Copilot, Google Workspace AI, Notion AI, GitHub Copilot…
-  * Customer service: Intercom AI, Zendesk AI, custom chatbots…
-  * HR & Recruitment: CV screening tools, Workday AI, LinkedIn Recruiter…
-  * Sales & CRM: Salesforce Einstein, HubSpot AI, lead scoring tools…
-  * Finance: fraud detection, credit scoring, forecasting tools…
-  * Custom: free-text for unlisted tools
-* Helper: "Check everything you use — we'll filter what's in scope"
+### What is captured per action
 
-### Step 2 — Review and confirm (single screen)
-* LLM analysis runs inline (~3s)
-* In-scope tools shown as cards: risk level badge, editable description, include/exclude toggle
-* Out-of-scope tools collapsed
-* Batch creation on confirm
+* `session_id` — groups actions from one agent run
+* `agent_identity` — which agent (name + framework)
+* `human_identity` — who triggered the session (if known)
+* `sequence` — order within the session
+* `type` — `llm_call` · `tool_call` · `file_read` · `file_write` · `file_delete` · `api_call` · `shell_command` · `bash` · `mcp_call` · `custom`
+* `timestamp` — UTC, millisecond precision
+* `duration_ms` — execution time
+* `affected_resources` — file paths, URLs, or identifiers accessed or modified
+* `model` — LLM model used (for `llm_call` actions)
+* `token_usage` — input/output/cache tokens
+* `status` — success · error · timeout
 
-### Description Quality Check
-* Runs automatically on every system save (wizard and manual)
-* LLM returns a quality score (0–100) and specific improvement suggestions
-* Displayed as a subtle indicator below the description field:
-  * Score ≥ 60: green dot — "Good description"
-  * Score < 60: amber dot — "Could be more specific" + tooltip with suggestions
-* **Never blocks classification** — the user always decides whether to improve the description first
-* Low quality is noted in the audit log and shown alongside the classification result
+### Log views
+
+* **Timeline** — chronological list of all actions across all sessions, filterable by agent, action type, resource, time range
+* **Session view** — all actions within a specific session, ordered by sequence
+* **Resource view** — all actions that touched a specific file, URL, or resource identifier
+* **Agent view** — all sessions and actions attributed to a specific agent identity
+
+### Search and filter
+
+* Filter by: project · agent · action type · affected resource · time range · status · human identity
+* Full-text search on resource paths and metadata
+* Exportable as JSON or CSV
 
 ---
 
-## AI Systems Registry
+## Session Replay
+
+Step-by-step reconstruction of any agent session. Not a log dump — a structured walkthrough.
+
+### What replay shows
+
+For each action in sequence:
+
+1. **Context** — what the agent had available at this point (prior messages, tool results, memory state if captured)
+2. **Decision** — what the agent was asked to do / what it inferred
+3. **Action** — what it executed (tool call, file write, LLM prompt, etc.)
+4. **Outcome** — what the result was (output, error, affected resources)
+
+### Use cases
+
+* **Debugging** — understand why an agent produced unexpected output
+* **Incident response** — reconstruct what an agent did during an anomalous session
+* **Onboarding** — walk new team members through how an agent works in practice
+* **Compliance audit** — present a structured evidence trail of agent operations to an auditor
+
+### Replay controls
+
+* Step forward / backward through actions
+* Jump to a specific action by type or resource
+* Compare two sessions side by side (diff view for affected resources)
+* Export replay as a PDF session report
+
+---
+
+## Agent Registry
+
+Auto-discovered from SDK data. No manual entry required.
+
+### Auto-discovery flow
+
+1. SDK reports agent identity + framework on first call
+2. Platform creates a draft `agent_identity` record for the project
+3. Dashboard surfaces new agent identities as "discovered" with a count of sessions and actions
+4. User promotes a discovered identity to the full compliance registry in one click
+5. The compliance classification form is pre-filled from observed behavior (autonomy level from tool usage, data types from action inputs, affected population from deployment context)
+
+### Registry fields (per agent identity)
+
+* Name, slug, framework
+* Project association
+* First seen / last seen / total sessions / total actions
+* Human identities that triggered sessions (list)
+* Top affected resources (most frequently touched files/URLs)
+* Linked compliance record (if promoted to AI system registry)
+* Status: `discovered` | `registered` | `archived`
+
+---
+
+## Anomaly Detection
+
+Monitors agent behavior patterns and flags deviations.
+
+### Anomaly types
+
+| Type | Description |
+|---|---|
+| `unexpected_scope` | Agent accessed a resource outside its expected operational scope |
+| `sensitive_file_access` | Agent read or modified a file matching a sensitive pattern (e.g., `.env`, `secrets/`, `*.pem`) |
+| `policy_violation` | Agent performed an action explicitly prohibited by the project's policy rules |
+| `volume_spike` | Session contains significantly more actions than the agent's historical baseline |
+| `error_rate_spike` | Session has an unusually high ratio of errored actions |
+| `exfiltration_pattern` | Agent read a large number of files followed by an outbound API call |
+| `unusual_shell_commands` | Shell commands outside the agent's normal profile |
+
+### Anomaly severities
+
+`low` · `medium` · `high` · `critical`
+
+### Policy rules
+
+Define what agents are permitted to do:
+
+```json
+{
+  "agent": "code-assistant",
+  "rules": [
+    { "deny": "file_write", "paths": ["**/.env", "**/secrets/**"] },
+    { "deny": "api_call", "hosts": ["!*.internal.company.com"] },
+    { "alert": "shell_command", "severity": "high" }
+  ]
+}
+```
+
+Rules are configured in the project settings. Violations create anomaly records and trigger alerts.
+
+### Alert delivery
+
+* In-platform notification (banner + anomaly center)
+* Email notification
+* Slack webhook (configurable per project)
+* SIEM export (JSON / CEF)
+
+---
+
+## EU AI Act Compliance Registry
+
+Same as before — but now auto-populated from SDK data instead of manual entry.
 
 * Create / edit / archive AI systems (soft-delete only — audit trail preserved)
 * Fields: name, description, use_case, data_used, autonomy_level, owner, sector
-* `source` field: quick_path | wizard | manual
+* `source` field: `sdk_discovered` | `manual` | `wizard`
+* `linked_agent_identity_id` — links to the SDK agent identity that feeds this record
 * `compliance_status` per system: `unclassified` | `compliant` | `needs_review` | `at_risk`
-* `last_classified_at`, `last_reviewed_at` timestamps
-* `description_quality_score` and `description_quality_feedback` stored per system
 * Status auto-degrades to `needs_review` when:
   * A regulatory update affects the system's use case or risk category
-  * The system description is updated by the user
+  * The system description is updated
   * More than 12 months have passed since the last classification
+  * The anomaly detection agent flags significant behavioral change
 
 ---
 
 ## Risk Classification
 
+* Pre-filled from SDK behavioral data where available (autonomy level, data types, deployment scope)
 * **5 essential questions** (required): description, affected population, human override, data sensitivity, deployment context
-* **5 optional refinements** (improve confidence score): sector, scale, explainability, bias testing, regulated product
+* **5 optional refinements**: sector, scale, explainability, bias testing, regulated product
 * LLM classification aligned to current regulatory version
-* Every classification stores:
-  * `risk_level`: minimal | limited | high | unacceptable
-  * `explanation`: plain-language justification (2–3 sentences)
-  * `obligations`: list of applicable obligations with implementation guides
-  * `confidence_score`: 0–100
-  * `requires_expert_review`: true if confidence < 70 or sensitive sector
-  * `triggered_by`: user | regulatory_change | system_update
-  * `regulatory_version_id`
-  * `is_current`
-* Classification history accessible per system (tab, not default view)
-* Low-confidence warning surfaced as an invitation ("Strengthen with expert review") — not as a blocker
+* Every classification stores: risk level, explanation, obligations, confidence score, regulatory version, trigger
+* Classification history accessible per system
+* Low-confidence warning (<70%) surfaced as an invitation to request expert review — not a blocker
 
 ---
 
@@ -82,7 +183,7 @@ Optional path for users who want to discover all in-scope systems at once. Acces
 
 * Generated from each classification
 * Each item: title, description, implementation_guide, regulatory_reference, status (todo | in_progress | done), optional due date
-* **Top 3 most critical obligations shown by default** — "Show all X" toggle
+* Top 3 most critical obligations shown by default — "Show all X" toggle
 * Completion percentage visible on system page and dashboard
 * Completing all obligations → status upgrades to `compliant`
 * Checklist versioned: new classification creates new checklist (previous archived)
@@ -92,7 +193,6 @@ Optional path for users who want to discover all in-scope systems at once. Acces
 ## Compliance Status
 
 * Per-system badge: `Compliant` | `Needs attention` | `Not assessed`
-  * (displayed label simplified; stored value: compliant | needs_review | at_risk | unclassified)
 * Organization summary: count by status
 * Partner portal shows health per client organization
 
@@ -105,7 +205,17 @@ Optional path for users who want to discover all in-scope systems at once. Acces
 * Alert shown as non-intrusive banner on system page + badge in nav
 * Email notification
 * Workflow: pending → acknowledged → dismissed (all logged)
-* Alerts Center accessible via nav badge — hidden from nav when no active alerts
+
+---
+
+## Compliance Document Generator
+
+* Linked to a specific `classification_id` and optionally to a `session_id` (for evidence linking)
+* Mandatory disclaimer block (non-removable, compact footer style)
+* Header: date · risk level · regulatory version date · status
+* Versioned per system; older versions accessible in history
+* Exportable as PDF
+* When linked to a session: includes "Evidence Trail" section showing the action log summary
 
 ---
 
@@ -114,61 +224,43 @@ Optional path for users who want to discover all in-scope systems at once. Acces
 Two levels allowing prescribers to start quickly and upgrade when ready.
 
 ### Level 1 — Scope Acceptance (15 minutes)
-* Read the Co-signature Scope Document (no forced scroll — single checkbox acceptance)
+* Read the Co-signature Scope Document
 * Unlocks co-signature for Minimal and Limited risk systems
-* Badge on co-signed documents: "Scope-accepted review"
-* No assessment required
+* Badge: "Scope-accepted review"
 
 ### Level 2 — Full Certification (~90 minutes)
 * 4 modules: EU AI Act risk levels, how to review a classification, co-signature responsibilities, sector quick-guides
 * 15-question assessment, 75% pass threshold
-* Immediate retry on failure (no delay)
 * Unlocks co-signature for all risk levels including High
 * Badge: "Certified AI Compliance Reviewer"
 * Valid 12 months; renewal: 20-min module + 5-question quiz
-
-### Co-signature Scope Document
-* Defines what the prescriber confirms (system accuracy, classification appropriateness, obligations completeness)
-* Defines what is excluded (guarantee of implementation, full legal opinion, replacement for own counsel)
-* Versioned — prescribers re-accept on material change
-* Publicly accessible on Trustixy legal page
 
 ---
 
 ## Prescriber Co-signature
 
-* Level 1 certified prescribers can sign Minimal/Limited risk documents
-* Level 2 certified prescribers can sign all risk levels
-* Co-signature request notifies prescriber via email + partner portal
-* Prescriber reviews on a two-panel page (document + review actions)
-* **Professional notes**: optional free-text reviewer comments — included in document as "Reviewer Comments" section
+* Prescriber reviews the classification, compliance document, and linked action log evidence
 * Actions: approve & sign | request changes | decline
-* On approval: prescriber name, firm, certification level badge, date embedded in document
+* On approval: prescriber name, firm, certification level, date embedded in document
+* Optional professional notes — included in document as "Reviewer Comments"
 * No linked prescriber → user offered partner directory + "Download with disclaimer" fallback
 
 ---
 
-## Compliance Document Generator
+## Audit Log (Platform-level)
 
-* Linked to specific classification_id
-* Mandatory disclaimer block (non-removable, compact footer style)
-* Header: date · risk level · regulatory version date · status
-* Versioned per system; older versions accessible in history tab
-* Exportable as PDF
+Separate from the SDK action log — records compliance platform actions.
 
----
-
-## Audit Log
-
-* Immutable, always running in the background — not surfaced in primary UX
-* Accessible from system page actions menu ("View audit trail")
-* Actions logged: create | update | archive | classify | obligation_updated | generate_document | signature_requested | signature_approved | signature_declined | alert_acknowledged | alert_dismissed | status_changed | wizard_completed | certification_completed | cosignature_scope_accepted
+* Immutable, always running
+* Actions logged: `system_create` · `system_update` · `system_archive` · `classify` · `obligation_updated` · `generate_document` · `signature_requested` · `signature_approved` · `signature_declined` · `alert_acknowledged` · `alert_dismissed` · `status_changed` · `certification_completed` · `cosignature_scope_accepted`
 * Exportable as PDF or CSV
 
 ---
 
 ## Export
 
-* Export compliance document (PDF) — disclaimer + signature block + regulatory version
-* Export system audit trail (PDF / CSV) — from actions menu on system page
-* Export organization compliance report — from dashboard settings menu
+* Export compliance document (PDF) — disclaimer + signature block + regulatory version + optional evidence trail
+* Export session replay (PDF) — structured walkthrough of an agent session
+* Export action log (JSON / CSV) — filterable, time-ranged
+* Export organization compliance report — all systems, statuses, obligation completion
+* SIEM export (JSON / CEF) — for anomaly events
