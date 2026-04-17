@@ -133,6 +133,34 @@ When applying to become a partner, the applicant reads and accepts the Co-signat
 
 ---
 
+## Viral Loop — Document Verification
+
+Every co-signed PDF is a distribution asset. Two mechanisms:
+
+### Footer badge on PDF
+
+Every generated PDF (signed and unsigned) includes a footer:
+
+> *"Compliance record managed with Trustixy · trustixy.com/verify/[doc-id]"*
+
+This is non-removable on Free and Pro plans. Enterprise can white-label (no badge).
+
+### Verification page (`/verify/[doc-id]`)
+
+Public page, no login required. Displays:
+- Organization name
+- Agent name
+- Risk level + classification date
+- Co-signer name and firm (if co-signed)
+- Document status: `active` | `superseded` | `revoked`
+- "Generated with Trustixy" CTA → trustixy.com
+
+Target audience: auditors, regulators, procurement teams receiving the document. CTA converts to awareness and potential signups.
+
+No sensitive data exposed on this page — only the fields listed above.
+
+---
+
 ## Audit Log (Platform-level)
 
 Separate from the SDK action log — records compliance platform actions.

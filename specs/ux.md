@@ -165,6 +165,54 @@ Single scrollable page. Replaces the tabbed system page. Sections always appear 
 
 ---
 
+## Plan Gates & Upgrade Moments
+
+Hard gates trigger the upgrade modal. Soft nudges are dismissible banners. Never block access to data the user has already seen.
+
+### Hard gates (modal, not dismissible)
+
+**4th agent detected (Free plan)**
+> *"You've reached 3 agents on the Free plan. Upgrade to Pro to track [new-agent-name] and all future agents."*
+> [Upgrade to Pro — €99/month] · [Not now]
+
+**Co-signature request (Free plan)**
+Triggered when user clicks [Request co-signature →]:
+> *"Co-signature requests are available on Pro. Upgrade to get your document professionally reviewed."*
+> [Upgrade to Pro — €99/month] · [Download unsigned PDF instead]
+
+**Session older than 30 days (Free plan)**
+Triggered when user clicks a session row that is >30 days old:
+> *"This session is older than 30 days. Upgrade to Pro to access your full 1-year history."*
+> [Upgrade to Pro — €99/month] · [Close]
+
+### Soft nudges (dismissible banner, shown once per trigger)
+
+**Log approaching limit (Free plan, oldest session 27 days old)**
+Banner at top of Activity:
+> *"Sessions older than 30 days will be deleted in 3 days. [Upgrade to keep your full history →]"*
+
+**First co-signature seen in partner portal (for end user)**
+Banner on Document section:
+> *"Your prescriber is ready to review. Upgrade to Pro to request co-signature. [Upgrade →]"*
+
+### Upgrade modal
+
+Title: "Upgrade to Pro"
+Content:
+- €99/month
+- Everything on Free, plus:
+- Unlimited agents
+- 1-year session history
+- Co-signature requests
+- Full obligation tracking
+
+CTA: [Start Pro — €99/month] → Stripe Checkout
+Secondary: [See all plans →] → /pricing
+
+No annual plan upsell in v1. Monthly only.
+
+---
+
 ## Alerts Page
 
 Accessible from nav badge (only when active alerts exist).
