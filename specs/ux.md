@@ -30,7 +30,7 @@ Full-page empty state on first login.
 
 > "See what your AI agents are doing in 5 minutes"
 
-Framework selector: Anthropic · OpenAI · Vercel AI · LangChain · Claude Code · Other
+Framework selector: Anthropic · OpenAI · Claude Code · Other
 
 On select: shows 3-line code snippet with pre-filled API key.
 
@@ -50,9 +50,9 @@ No alternative path at this screen. Users who arrive via prescriber invitation s
 After the developer runs one agent call, the session appears in Activity automatically.
 
 Banner fires once:
-> *"Agent [name] detected. Register it for EU AI Act compliance? [Review →]"*
+> *"[agent-name] detected. Classify it for EU AI Act compliance? [Classify →]"*
 
-Clicking the banner starts the registration flow inline — no page change.
+Clicking the banner starts the classification flow inline — no page change.
 
 ### Step 3 — Classify (one screen)
 

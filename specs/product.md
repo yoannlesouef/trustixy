@@ -87,10 +87,10 @@ This disclaimer is versioned and stored with every document. It is non-removable
 Traditional compliance tools require manual registry entry. Trustixy eliminates this friction.
 
 When the SDK is installed:
-1. Every AI framework call is captured and attributed to an agent identity
-2. Agent identities are grouped into a project
-3. The platform detects new agent identities and surfaces them as "discovered systems"
-4. With one click, the compliance team promotes a discovered system to the full registry
+1. Every AI framework call is captured and attributed to an agent
+2. Agents are grouped into a project
+3. The platform detects new agents and surfaces them in the Agents page immediately
+4. With one click, the user classifies the agent — no promotion step
 5. The classification questionnaire is pre-filled from observed behavior (autonomy level detected from tool usage patterns, data types inferred from action inputs/outputs, affected population from deployment context)
 
 The result: the compliance registry is a live reflection of how AI is actually being used in production — not a stale document.

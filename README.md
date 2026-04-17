@@ -42,7 +42,7 @@ from trustixy import wrap
 client = wrap(anthropic.Anthropic(), project="my-backend", agent="code-assistant")
 ```
 
-Supports: **Anthropic · OpenAI · Vercel AI SDK · LangChain · LlamaIndex · CrewAI · Claude Code hooks · MCP**
+**v1:** Anthropic · OpenAI · Claude Code hooks — **v2 planned:** Vercel AI SDK · LangChain · LlamaIndex · CrewAI · MCP
 
 ### 2. Every action is captured automatically
 

@@ -44,9 +44,9 @@ Only `production` sessions feed the compliance layer and document evidence trail
 
 ## Adding More Agents
 
-As developers instrument additional agents, new identities appear automatically in the Agents page with status `Discovered`. A dashboard nudge prompts registration:
+As developers instrument additional agents, new agents appear automatically in the Agents page. A dashboard nudge prompts classification:
 
-> *"[N] agent(s) detected but not registered for compliance. [Register →]"*
+> *"[N] agent(s) detected. Classify for EU AI Act compliance? [Classify →]"*
 
 Each agent follows the same single-screen flow: classify (5 pre-filled questions) → obligations checklist. No batch flow — classify agents one at a time as they become production-ready.
 

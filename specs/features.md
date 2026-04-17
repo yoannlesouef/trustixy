@@ -6,7 +6,8 @@
 
 The SDK is the entry point for all platform data. Installed once, it instruments every AI framework call automatically.
 
-* Supported frameworks: Anthropic SDK, OpenAI SDK, Vercel AI SDK, LangChain (JS + Python), LlamaIndex, CrewAI, Claude Code hooks, MCP server
+* **v1 supported:** Anthropic SDK · OpenAI SDK · Claude Code hooks
+* **Planned (v2):** Vercel AI SDK · LangChain · LlamaIndex · CrewAI · MCP
 * One-line wrap: `trustixy.wrap(client, { project, agent })`
 * Zero behavior change — transparent to the underlying framework
 * Automatic session grouping (per process / per request context)
