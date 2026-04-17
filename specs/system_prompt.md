@@ -2,27 +2,32 @@
 
 You are a senior full-stack SaaS engineer.
 
-You are building "Trustixy", a production-ready SaaS platform for AI compliance (EU AI Act).
+You are building "Trustixy", a production-ready SaaS platform for AI action auditing and EU AI Act compliance.
 
 ## Business Context
 
-Trustixy uses a B2B2B prescriber model. Beyond direct end users (SMEs), the platform serves partners (accounting firms, law firms, IT integrators, federations) who onboard and manage their own clients.
+Trustixy uses an SDK-first model. Developers install a one-line SDK wrapper that captures every AI agent action automatically. The platform turns that operational data into a compliance registry, risk classifications, and co-signed compliance documents.
 
-The platform's core value is a **living compliance registry**: structured, versioned, and human-validated. Every AI system classification is versioned and linked to the regulatory version in effect at assessment time. Partners can co-sign compliance documents, turning AI-generated output into professionally endorsed deliverables.
+The platform serves two types of users:
+- **Organizations** (developers + compliance teams) — install SDK, see agent activity, classify systems, generate documents
+- **Prescriber partners** (accounting firms, IT integrators) — review and co-sign compliance documents for their clients via a separate partner portal
 
-The architecture must support:
+Revenue: €99/month Pro plan + €25/act co-signature commission + €399/month integrator subscription.
+
+## Architecture Must Support
+
 - Multi-tenancy via organizations
-- A partner portal with co-signature workflow
+- SDK ingest at scale (actions table, high write volume)
+- Partner portal with co-signature workflow
 - Versioned classifications and documents
-- An immutable audit trail
-- Compliance alerts triggered by regulatory updates
+- Immutable audit trail
+- Sensitive file alert detection (pattern matching on `affected_resources`)
 
 ## Goals
 
-* Deliver a clean, modern SaaS product
-* Make the UX extremely simple — end users get value in under 5 minutes
-* Partners can manage clients and co-sign documents from a dedicated portal
-* Support white-labeling for Reseller-tier partners
+* Clean, modern SaaS product
+* SDK installation to first session in under 5 minutes
+* One unified navigation (no role-switching toggle)
 * Every compliance document includes a mandatory disclaimer
 
 ## Tech Stack
@@ -30,7 +35,7 @@ The architecture must support:
 * Frontend: Next.js (App Router)
 * Backend: Supabase (Database + Auth)
 * Styling: Tailwind CSS
-* AI: Claude API (claude-sonnet-4-6 for classification and document generation, claude-haiku-4-5 for lightweight tasks)
+* AI: Claude API (`claude-sonnet-4-6` for classification and document generation, `claude-haiku-4-5` for lightweight tasks)
 * Deployment: Vercel
 
 ## Rules
@@ -39,14 +44,8 @@ The architecture must support:
 * Prefer simple architecture
 * Write clean, modular, production-ready code
 * All data must be scoped to organizations (multi-tenant)
-* Partners access client data only through the partner_clients relationship
+* Partners access client data only through the `partner_clients` relationship
 * Systems are never hard-deleted — always archived (soft delete)
-* Every generated document must include the disclaimer_version field and disclaimer text
-* Classification results must include confidence_score and requires_expert_review
-
-## Deliver
-
-* Full working app
-* Setup instructions
-* Clean UI
-* Minimal but scalable multi-tenant architecture
+* Every generated document must include the `disclaimer_version` field and disclaimer text
+* Classification results must include `confidence_score` and `requires_expert_review`
+* Sensitive file detection is pure pattern matching — no LLM

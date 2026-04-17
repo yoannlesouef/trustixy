@@ -1,8 +1,8 @@
-# User Guide — End User (SME / CTO / Legal Team)
+# User Guide
 
 ## Who this guide is for
 
-This guide is for anyone at an organization that uses or builds AI systems and needs to comply with the EU AI Act. You do not need legal expertise to use Trustixy. This guide walks you through every step from first login to a co-signed compliance document.
+Anyone at an organization that builds or uses AI agents and needs to comply with the EU AI Act. You do not need legal expertise. This guide walks you from first login to a co-signed compliance document.
 
 ---
 
@@ -12,243 +12,168 @@ This guide is for anyone at an organization that uses or builds AI systems and n
 1. Go to trustixy.com and click **Start for free**
 2. Enter your email and create a password
 3. Enter your organization name — this creates your private workspace
-4. You will receive a confirmation email. Click the link to activate your account.
+4. Confirm your email via the activation link
 
-### Access your dashboard
-After login, you land on the **Dashboard**. It shows:
-- Your compliance summary (how many systems are compliant, need review, or are unclassified)
-- Your AI systems list with status badges
-- Any active compliance alerts at the top
+### Install the SDK
 
-If your organization was invited by a prescriber partner, their name will appear in the top bar. Your data remains private — your prescriber only sees the compliance status of your systems, not the content.
+After login you land on the SDK quickstart. Select your framework and copy the 3-line snippet:
 
----
+```typescript
+// JavaScript / TypeScript
+const client = trustixy.wrap(new Anthropic(), {
+  project: "my-app",
+  agent: "code-assistant"
+});
+```
 
-## 2. Identifying Your AI Systems (Wizard)
+```python
+# Python
+client = wrap(anthropic.Anthropic(), project="my-app", agent="code-assistant")
+```
 
-The first challenge most organizations face is simply knowing which tools they use that qualify as AI systems under the EU AI Act. Trustixy's identification wizard solves this.
+Set your API key (shown in the snippet):
+```bash
+TRUSTIXY_API_KEY=txk_live_...
+```
 
-### What counts as an AI system?
-Any software that uses AI to make or support decisions: a chatbot, a recommendation engine, a CV screening tool, a credit scoring model, a fraud detection system, an automated email classifier. If it uses machine learning or AI to produce outputs that influence decisions — it's likely in scope.
+Run your agent once. Within seconds, the first session appears in **Activity**.
 
-### Running the wizard
-The wizard is triggered automatically after your first login. You can also access it anytime from the dashboard ("Discover your AI systems →").
-
-**Step 1 — Select your sector**
-Choose your primary sector. Trustixy uses this to filter the tool list to what's most relevant for you.
-
-**Step 2 — Check the tools you use**
-You'll see a categorized list of common AI-powered tools. Check everything your organization uses — even tools you're not sure about. Categories include productivity tools, customer service, HR, sales, and finance. There's also a free-text field for tools not in the list.
-
-**Step 3 — Review the analysis**
-Trustixy analyzes each tool you checked. For each one in scope of the EU AI Act, you'll see:
-- Why it's in scope
-- Its likely risk level
-- A pre-filled description you can edit
-
-Tools that are out of scope are listed separately with an explanation.
-
-**Step 4 — Confirm and create your registry**
-Review the pre-filled descriptions, edit as needed, and click **Create my registry**. All confirmed systems are added to your registry with status Unclassified.
-
-### Description quality
-When you save a system description, Trustixy checks its quality automatically. A good description enables an accurate classification — it should clearly explain what the system does, how it makes decisions, what data it uses, and whether humans can override its outputs.
-
-If the description is insufficient, you'll see an orange indicator with specific suggestions: "Please clarify whether personal data is processed" or "Specify how autonomous the system's decisions are." Classification is blocked until the quality score is sufficient — this protects you from getting a meaningless result.
+Full SDK reference: see `specs/sdk.md`
 
 ---
 
-## 3. Registering a System Manually
+## 2. Understanding the Activity View
 
-If you want to add a system outside of the wizard:
+Every agent session is listed in **Activity** — your home screen.
 
-1. Click **Add system** on the dashboard
-2. Fill in the fields:
-   - **Name** — a clear internal name (e.g. "Customer support chatbot")
-   - **Description** — what the system does in plain language (quality check runs on save)
-   - **Use case** — what business decision or process it supports
-   - **Data used** — what types of data the system processes (personal, financial, behavioral, etc.)
-   - **Autonomy level** — does the system make decisions automatically, or does a human always review?
-   - **Owner** — the person or team responsible for this system
-3. Click **Save**
+Each row shows: Agent · Triggered by · Actions · Duration · Started
 
-The system is created with status **Unclassified**. If the description quality is insufficient, improve it before classifying.
+Click a session to see the full action timeline: every LLM call, file read, file write, API call, and shell command your agent executed, in order.
 
-### Edit or archive a system
-- Click the system name to open the system page
-- Use the edit icon to update any field
-- Updating the description automatically sets the status to **Needs Review** — re-classify after significant changes
-- To remove a system, use **Archive**. Archived systems are never deleted — they remain in your audit trail.
+Color coding: LLM call (blue) · file write (orange) · file read (grey) · API call (purple) · shell (red) · error (red background)
 
 ---
 
-## 3. Running a Classification
+## 3. Classifying an Agent
 
-### Start the questionnaire
-1. Open the system page and click **Classify**
-2. Answer 10 structured questions about the system:
-   - What sector does it operate in?
-   - Who is affected by the decisions it makes?
-   - Can a human override its output?
-   - What sensitive data does it process?
-   - Is it deployed internally or publicly?
-   - (and more)
-3. Click **Submit** when done
+When Trustixy detects a new agent, a banner appears:
 
-### Review the result
-After submission, Trustixy displays:
-- **Risk level**: Minimal / Limited / High / Unacceptable
-- **Explanation**: why this risk level was assigned
-- **Confidence score**: how certain the AI is of this classification (0–100%)
-- **Obligations**: a list of what the EU AI Act requires for this system
+> *"[agent-name] detected. Classify it for EU AI Act compliance? [Classify →]"*
 
-**If the confidence score is below 70%**, a yellow warning appears:
-> "This classification has low confidence. We recommend requesting a review from your prescriber partner before generating a compliance document."
+Click **Classify →** to open the classification screen. All 5 questions are pre-filled from observed behavior — review, adjust if needed, and submit:
 
-This does not block you — you can proceed without a review. But it is a signal to be careful.
+1. What does this agent do?
+2. Who is affected by its outputs?
+3. Can a human override its decisions?
+4. What types of data does it process?
+5. Is it deployed in a regulated sector?
 
-### What the risk levels mean
+Submit → risk level, plain-language explanation, and obligations checklist appear immediately on the same page.
 
-| Level | What it means | Typical examples |
-|---|---|---|
-| **Minimal** | No specific EU AI Act obligations | Spam filter, basic recommendation |
-| **Limited** | Transparency obligations (users must know they're interacting with AI) | Chatbot, AI-generated content |
-| **High** | Strict requirements: risk management, transparency, human oversight, data governance | Hiring tools, credit scoring, medical devices, law enforcement |
-| **Unacceptable** | Prohibited under the EU AI Act | Social scoring, real-time biometric surveillance in public spaces |
+### Risk levels
+
+| Level | What it means |
+|---|---|
+| **Minimal** | No specific EU AI Act obligations |
+| **Limited** | Transparency obligations — users must know they're interacting with AI |
+| **High** | Strict requirements: risk management, human oversight, data governance |
+| **Unacceptable** | Prohibited under the EU AI Act |
+
+**If the confidence score is below 70%**, a warning suggests requesting expert review. This does not block you.
 
 ---
 
 ## 4. Managing Your Obligations Checklist
 
-After each classification, an **Obligations Checklist** is generated — a list of concrete actions your organization must take for this system to be compliant.
+After classification, the **Obligations Checklist** appears directly below the result — a list of concrete actions required for this system to be compliant.
 
-### Working with the checklist
 Each item shows:
-- **Title** — what you need to do
-- **Description** — detailed explanation
-- **Regulatory reference** — the specific EU AI Act article
-- **Status** — Todo / In Progress / Done
-- **Optional due date**
+- What to do
+- Why (regulatory reference)
+- A **done checkbox**
 
-### Updating item status
-1. Click on any checklist item
-2. Change the status to **In Progress** or **Done**
-3. Changes are saved automatically and logged in the audit trail
+Tick the checkbox when you've implemented it. Changes are logged automatically.
 
-### Completion progress
-The system page shows a progress bar (e.g. "3 of 7 obligations complete"). Your dashboard shows this for all systems at a glance.
+When all obligations are checked, the agent's compliance status upgrades to **Compliant**.
 
-When all obligations are marked **Done**, the system's compliance status upgrades to **Compliant**.
+The checklist is your main return-visit habit: come back weekly, tick obligations off as you implement them.
 
 ---
 
 ## 5. Generating a Compliance Document
 
-### Generate a document
-1. From the system page, click **Generate document**
-2. Trustixy generates a structured compliance document that includes:
-   - System description and purpose
-   - Risk classification and justification
-   - Applicable obligations
-   - Risk analysis
-   - Mitigation measures
-   - Human oversight section
-   - A mandatory disclaimer
+From the agent page, click **Generate document**.
 
-The document is linked to your current classification. If you re-classify later, the previous document is preserved and marked as superseded.
+Trustixy generates a structured document including:
+- System description and purpose
+- Risk classification and justification
+- Applicable obligations
+- Risk analysis and mitigation measures
+- Human oversight section
+- Operational evidence trail (linked to your SDK sessions)
+- Mandatory disclaimer
 
-### The disclaimer
-Every document contains this notice:
+**The disclaimer** (non-removable):
+> *"This document was generated by Trustixy using AI assistance and operational data from the Trustixy SDK. It is provided to support your compliance process and does not constitute legal advice. Trustixy cannot be held liable for regulatory decisions made solely on the basis of this document."*
 
-> *"This document was generated by Trustixy using AI assistance. It is provided to support your compliance process and does not constitute legal advice. Trustixy cannot be held liable for regulatory decisions made solely on the basis of this document. For legally binding compliance, we recommend co-signature by a qualified prescriber partner or review by a qualified legal professional."*
-
-This is non-removable and appears in both the on-screen view and the PDF export.
-
-### Export to PDF
-Click **Export PDF** to download the document. The PDF includes:
-- Document header (generation date, regulatory version, confidence score)
-- Full document content
-- Disclaimer block
-- Signature block (shows "Unsigned" until co-signed)
+Click **Download PDF** to export. The PDF includes the document, disclaimer, and signature block (shows "Unsigned" until co-signed).
 
 ---
 
 ## 6. Requesting Co-signature
 
-Co-signature is the process of having your prescriber partner (accounting firm, law firm, or IT integrator) review and professionally endorse your compliance document.
+Co-signature is having a professional partner review and endorse your compliance document.
 
-**Why it matters:** An unsigned AI-generated document is a useful starting point. A co-signed document carries genuine professional standing — your advisor has reviewed and validated it.
-
-### When to request co-signature
-- When the confidence score is below 70%
-- Before submitting documentation to a regulator or auditor
-- For high-risk systems (risk level: High or Unacceptable)
-- Any time you want professional validation of your compliance posture
+**Why it matters:** An AI-generated document is a useful starting point. A co-signed document has professional standing — your advisor has reviewed the classification and the operational evidence behind it.
 
 ### How to request
-1. From the document page, click **Request co-signature**
-2. Select your prescriber partner (pre-filled if your organization is linked to one)
-3. Add an optional message (e.g. "Please review before our audit on June 15")
+1. From the agent page, click **Request co-signature**
+2. Select your prescriber partner (pre-filled if your organization was invited by one)
+3. Add an optional message
 4. Click **Send request**
 
-Your prescriber receives an email notification and sees the request in their partner portal.
+Your prescriber receives a notification and reviews the document from their partner portal.
 
 ### What happens next
-- **Pending:** The document shows "Awaiting review by [Partner Firm]"
-- **Changes requested:** You will receive a notification with the prescriber's notes. Update the system description or ask Trustixy to re-classify, then re-submit.
-- **Approved and signed:** The document shows a verified badge with the prescriber's name, firm, and date. The PDF export includes a signed signature block.
+- **Pending:** Document shows "Awaiting review by [Partner Firm]"
+- **Changes requested:** You receive the prescriber's notes. Update the description or re-classify, then re-submit.
+- **Approved:** Document shows a verified badge with the prescriber's name, firm, and date. The PDF export includes a signed signature block.
 
 ---
 
-## 7. Understanding Compliance Alerts
+## 7. Sensitive File Alerts
 
-Trustixy monitors EU AI Act updates. When a relevant change is published, you receive an alert.
+If an agent accesses a credential file (`.env`, secrets, PEM files), Trustixy sends an instant email alert and logs it under **Alerts** in the navigation.
 
-### What an alert looks like
-A banner appears on your dashboard and system page:
-> "Regulatory update: [Summary of change]. This may affect [System Name]. Re-classification recommended."
+Each alert shows: which agent, which file, which session, and when.
 
-You also receive an email.
-
-### What to do
-1. Read the alert — it explains what changed and why your system may be affected
-2. Click **Re-classify now** to run a new assessment under the updated regulation
-3. Or click **Acknowledge** if you have reviewed it and determined no action is needed
-4. Or click **Dismiss** if the alert does not apply to your system
-
-All actions are logged in the audit trail.
-
-### Alert history
-The **Alerts Center** (accessible from the main navigation) shows all past and active alerts for your organization, filterable by status and system.
+Acknowledge or dismiss alerts from the Alerts page. All actions are logged.
 
 ---
 
 ## 8. Exporting Your Compliance Record
 
-### Export a compliance document
-From the document page, click **Export PDF**.
+**Compliance document (PDF):** From the agent page, click **Download PDF**.
 
-### Export your audit trail
-From the system page, scroll to **Audit Log** and click **Export**. This produces a PDF or CSV with every action taken on this system — creation, updates, classifications, document generations, co-signatures, alert acknowledgements.
+**Audit trail:** From the agent page, click **Export** in the History section. Produces a PDF or CSV with every classification, document generation, and co-signature action.
 
-### Export your organization compliance report
-From the dashboard, click **Export compliance report**. This produces a PDF covering all your systems: compliance statuses, classification dates, obligation completion rates, and document versions. Useful for internal governance reviews or partner presentations.
+**Organization compliance report:** From Settings, click **Export compliance report**. Covers all agents: statuses, classification dates, obligation completion rates.
 
 ---
 
 ## 9. Frequently Asked Questions
 
-**Do I need legal expertise to use Trustixy?**
-No. The questionnaire is written in plain language. The classification and document are generated automatically. For high-stakes systems, we recommend having a prescriber partner co-sign.
+**Do I need legal expertise?**
+No. The classification questions are in plain language. For high-risk systems, we recommend prescriber co-signature.
 
-**What if my system's description changes significantly?**
-Update the system description — Trustixy will prompt you to re-classify. Previous classifications and documents are preserved in your history.
+**What if my agent's behavior changes significantly?**
+Update the system description — Trustixy will prompt you to re-classify. Previous versions are preserved.
 
-**Can I have multiple people in my organization use the same account?**
-Yes. You can invite team members from the organization settings. Roles: Admin (full access) and Member (can view and classify, cannot delete or change organization settings).
+**Can multiple people access the account?**
+Yes. Invite team members from Settings → Team. Everyone has full access in v1.
 
-**What happens if a system is classified as Unacceptable risk?**
-The document will describe the prohibition and what you must do: stop deploying the system or modify it until it no longer falls in this category. Trustixy does not block you from registering such a system — it helps you understand and document what needs to change.
+**What if a system is classified as Unacceptable risk?**
+The document describes the prohibition and what must change. Trustixy does not block you from registering it — it helps you document what needs to be fixed.
 
 **Is my data shared with anyone?**
-No. All data is scoped to your organization. If you are linked to a prescriber partner, they see your compliance status and can view documents you explicitly share for co-signature. They do not have access to your raw system data.
+No. All data is scoped to your organization. A prescriber partner can only view documents you explicitly share for co-signature.

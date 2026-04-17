@@ -282,7 +282,7 @@ Every action record includes:
 | Field | Description |
 |---|---|
 | `session_id` | Groups actions from one agent run |
-| `agent_identity` | Which agent (name + framework) |
+| `agent_id` | Which agent (name + framework) |
 | `human_identity` | Who triggered the session (if known) |
 | `sequence` | Order within the session |
 | `type` | `llm_call` · `tool_call` · `file_read` · `file_write` · `file_delete` · `api_call` · `shell_command` · `bash` · `mcp_call` · `custom` |

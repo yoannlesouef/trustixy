@@ -22,7 +22,7 @@ L'utilisation de la Plateforme implique l'acceptation pleine et entière des pr�
 
 **Utilisateur final** : toute personne physique ou morale qui accède à la Plateforme pour enregistrer et gérer ses systèmes d'IA.
 
-**Prescripteur partenaire** (ci-après « Prescripteur ») : tout professionnel (cabinet comptable, cabinet d'avocats, ESN, fédération, etc.) ayant conclu un accord de partenariat avec Trustixy et disposant d'un accès au portail partenaire.
+**Prescripteur partenaire** (ci-après « Prescripteur ») : tout professionnel (cabinet comptable, cabinet d'avocats, ESN, intégrateur, etc.) ayant conclu un accord de partenariat avec Trustixy et disposant d'un accès au portail partenaire.
 
 **Co-signature** : acte par lequel un Prescripteur examine et valide professionnellement un document de conformité généré par la Plateforme, en y apposant son nom, sa société et la date de validation.
 
@@ -44,9 +44,9 @@ L'Utilisateur est seul responsable de la confidentialité de ses identifiants de
 
 ### 3.3 Offres et plans
 L'accès aux fonctionnalités de la Plateforme est soumis à la souscription d'un plan :
-- **Free** : jusqu'à 3 systèmes d'IA, documents non co-signés
-- **Pro** : systèmes illimités, historique des alertes, demandes de co-signature
-- **Enterprise** : rapport de conformité organisationnel, accès API, export audit avancé, SLA
+- **Free** : jusqu'à 3 agents, rétention des logs 30 jours, documents non co-signés
+- **Pro** : agents illimités, rétention 1 an, demandes de co-signature, suivi complet des obligations
+- **Enterprise** : rétention illimitée, SSO, export API, rapport de conformité organisationnel, SLA
 
 Les conditions tarifaires en vigueur sont consultables sur la page Tarifs de la Plateforme. Trustixy se réserve le droit de modifier ses tarifs avec un préavis de 30 jours.
 
@@ -68,7 +68,7 @@ L'Utilisateur reconnaît avoir lu et compris cet avertissement avant toute utili
 Chaque classification est accompagnée d'un score de confiance (0–100). Un score inférieur à 70 déclenche un avertissement invitant l'Utilisateur à solliciter la revue d'un Prescripteur. L'Utilisateur est libre de ne pas suivre cette recommandation, sous sa propre responsabilité.
 
 ### 4.4 Évolution de la réglementation
-L'AI Act est une réglementation vivante. Trustixy s'efforce de maintenir à jour sa base de connaissances réglementaires via le mécanisme de veille automatique. Cependant, Trustixy ne garantit pas l'exhaustivité ni l'immédiateté de la prise en compte de toute évolution réglementaire.
+L'AI Act est une réglementation vivante. Trustixy s'efforce de maintenir à jour sa base de connaissances réglementaires. Cependant, Trustixy ne garantit pas l'exhaustivité ni l'immédiateté de la prise en compte de toute évolution réglementaire. Il appartient à l'Utilisateur de s'assurer que ses évaluations restent conformes à la version du règlement en vigueur.
 
 ---
 

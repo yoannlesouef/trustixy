@@ -6,9 +6,9 @@
 Your AI systems, compliant by design.
 
 **Sub-headline**
-The EU AI Act requires you to register, classify, and document every AI system your organization uses — and keep it up to date as the regulation evolves. Trustixy makes this manageable: structured, traceable, and human-validated.
+The EU AI Act requires you to register, classify, and document every AI system your organization uses. Trustixy makes this manageable: install the SDK, see what your agents do, and turn that operational data into a defensible compliance record.
 
-**Primary CTA:** Classify your first system — free, 3 minutes
+**Primary CTA:** Install the SDK — free, 5 minutes
 **Secondary CTA:** Become a partner
 
 **Trust signals (below CTAs)**
@@ -32,26 +32,20 @@ You probably use AI tools across teams — a sales chatbot here, a scoring model
 **No audit trail**
 A compliance document without history is worth little to a regulator. When was the system last assessed? Under which version of the regulation? Who validated it? These questions need answers.
 
-**Regulations change — and no one tells you**
-The EU AI Act is a living regulation. When new guidelines are published, which of your systems are affected? Without active monitoring, you won't know until it's too late.
-
 ---
 
 ## Solution Section
 
 **Section title:** A living compliance registry, not a one-time document.
 
-**Step 1 — Classify in 3 minutes**
-Name your AI tool, answer 5 questions. Get a risk level, a plain-language explanation, and a list of what you need to do. No setup, no legal expertise required.
+**Step 1 — Instrument in 5 minutes**
+Add one line to your AI project. Trustixy wraps your existing SDK calls and captures every agent action automatically — zero behavior change.
 
-**Step 2 — Build your registry**
-Not sure which tools are in scope? The identification wizard analyzes your full tool stack and creates your registry in one go. Every system tracked, every history preserved.
+**Step 2 — Classify in 10 minutes**
+Your agent is detected automatically. Answer 5 questions (most pre-filled from observed behavior) to get a risk level, obligations list, and compliance document — backed by real operational data.
 
 **Step 3 — Get expert validation (optional)**
-Request review from a certified prescriber partner. They review and co-sign your document — giving it genuine professional standing and a named expert behind it.
-
-**Step 4 — Stay current automatically**
-When the EU AI Act is updated, Trustixy identifies which of your systems are affected and sends you an alert. Your registry stays current without manual monitoring.
+Request review from a certified prescriber partner. They review your document and the operational evidence behind it, then co-sign — giving it genuine professional standing.
 
 ---
 
@@ -73,9 +67,11 @@ You advise companies on regulatory obligations. Trustixy lets you deliver a stru
 
 **Section title:** Are you an expert partner?
 
-A prescriber partner is any professional who advises organizations on regulatory compliance and wants to deliver AI Act compliance as a service to their clients.
+A prescriber partner is any professional — external advisor or internal team — who reviews AI systems for compliance and wants to co-sign compliance documents backed by real operational evidence.
 
 **Who qualifies:**
+
+**External advisors**
 
 **Accounting and audit firms**
 You already advise your SME clients on GDPR, tax, and regulatory obligations. The EU AI Act is a natural extension — and a new billable deliverable. Trustixy generates the compliance document; you review, co-sign, and deliver it under your firm's name.
@@ -86,27 +82,28 @@ Your clients ask you what the EU AI Act means for them. Trustixy gives you a str
 **IT integrators and software companies (ESN/SSII)**
 You build and deploy AI systems for your clients. You're already accountable for what you deliver. Bundling compliance documentation into your project deliverable protects you and adds value to your contracts.
 
-**Industry federations and trade associations**
-Your members are SMEs trying to navigate a new regulation. A group Trustixy license gives them access to a practical compliance tool — and positions your federation as proactive on AI governance.
+**Internal teams**
 
-**Three ways to work with Trustixy:**
+**Compliance teams**
+You own the EU AI Act mandate within your organization. Trustixy gives you a centralized registry of all AI systems — auto-populated from SDK data — with a review queue you can work through and co-sign, creating a clear internal audit trail.
 
-**Co-signature per act** *(cabinets, consultants)*
-Vous fixez votre prix de co-signature. Vos clients le voient au moment de leur demande. Vous encaissez directement via Stripe — Trustixy prélève €25 par acte. Pas d'abonnement, pas de partage de marge.
+**Security teams (CISO, InfoSec)**
+You already review AI deployments for risk. Trustixy's SDK evidence aligns with your existing audit workflows — and your co-signature attests to behavioral accuracy, not legal advice, which fits your review scope precisely.
 
-**Licence fédération** *(fédérations, syndicats, ordres)*
-Un contrat annuel unique donne à tous vos membres l'accès au plan Pro Trustixy, sous votre marque. Vous gérez la distribution, nous gérons la plateforme.
+**Two ways to work with Trustixy:**
 
-**Licence intégrateur** *(ESN/SSII, intégrateurs AI)*
-Un abonnement mensuel avec usage illimité et API. Le rapport de conformité Trustixy devient une annexe standard de vos livrables projet — facturée à votre client, à votre prix.
+**Co-signature per act** *(accounting firms, consultants)*
+You set your own co-signature fee. Your clients see it when they submit their request. You collect directly via Stripe — Trustixy takes €25 per act. No subscription, no margin sharing.
+
+**Integrator license** *(IT service companies, AI integrators)*
+€399/month, unlimited usage and API access. The Trustixy compliance report becomes a standard deliverable in your project scope — billed to your client at your own price.
 
 **What you get as a partner:**
 
-- **Your own white-labeled portal** — clients see your brand, not Trustixy's (Reseller and Integrator tiers)
 - **Co-signature workflow** — review and professionally endorse compliance documents from your partner portal
 - **Client management dashboard** — see the compliance health of all your clients at a glance
 - **Direct billing** — set your own co-signature fee; Trustixy handles the payment infrastructure (Stripe Connect)
-- **Certification program** — a 15-minute scope acceptance or a 90-minute full certification, your choice
+- **Certification program** — 15-minute scope acceptance unlocks co-signature for all risk levels
 - **Marketing assets** — pitch deck, client one-pager, partner badge for your website
 
 **How co-signature works:**
@@ -130,13 +127,13 @@ Co-signature means you have reviewed the classification and applied your profess
 
 | Feature | What it does |
 |---|---|
-| AI Systems Registry | Centralized, versioned inventory of all your AI systems — never deleted, always auditable |
-| Risk Classification | AI-assisted assessment with confidence scoring and expert review flag |
+| SDK Action Log | Every AI agent action captured automatically — structured, immutable, queryable |
+| Agent Registry | Auto-discovered from SDK data — no manual forms |
+| Risk Classification | AI-assisted, pre-filled from operational data, confidence-scored |
 | Obligations Checklist | Actionable tasks per system — not just a document, but a compliance to-do list |
-| Regulatory Alerts | Automatic notifications when EU AI Act updates affect your registered systems |
-| Prescriber Co-signature | Your advisor reviews and endorses your compliance document |
-| Compliance Document | Structured, versioned, disclaimer-embedded — ready for auditors |
-| Immutable Audit Trail | Every action logged, every version stored, exportable for regulatory submissions |
+| Sensitive File Alerts | Instant notification when an agent accesses credentials or secrets |
+| Prescriber Co-signature | Your advisor reviews and co-signs your compliance document |
+| Compliance Document | Structured, versioned, disclaimer-embedded, backed by real operational evidence |
 
 ---
 
@@ -163,19 +160,18 @@ All data is scoped to your organization. No system information is shared across 
 
 | Plan | Price | Systems | Features |
 |---|---|---|---|
-| Free | €0/month | Up to 3 | Registry, classification, document with disclaimer |
-| Pro | €49/month | Unlimited | + Full alert history, co-signature requests, obligation tracking |
-| Enterprise | Custom | Unlimited | + Org compliance report, API access, advanced audit export, SLA |
+| Free | €0/month | Up to 3 | SDK log · classification · document with disclaimer |
+| Pro | €99/month | Unlimited | + 1-year log retention · co-signature requests · full obligation tracking |
+| Enterprise | Custom | Unlimited | + Org compliance report · API access · audit export · SLA |
 
-All plans include the full audit trail and regulatory alert engine.
+One plan covers both SDK visibility and compliance — no split billing.
 
 **Pour les prescripteurs**
 
 | Modèle | Pour qui | Coût Trustixy | Ce que vous gagnez |
 |---|---|---|---|
 | Co-signature per acte | Cabinets, consultants | €25/acte (commission) | Votre tarif × volume — vous encaissez directement |
-| Licence fédération | Fédérations, syndicats | €3 000–10 000/an | Distribution à tous vos membres, zéro friction |
-| Licence intégrateur | ESN/SSII, intégrateurs | €299–599/mois | Rapport conformité dans chaque livrable projet |
+| Licence intégrateur | ESN/SSII, intégrateurs | €399/mois | Rapport conformité dans chaque livrable projet |
 
 **CTA:** Start free — no credit card required
 **CTA prescripteur:** Choisir mon modèle partenaire →

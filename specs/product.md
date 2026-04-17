@@ -28,7 +28,7 @@ AI agents now write code, call APIs, modify files, and deploy infrastructure aut
 
 ### Layer 1 — SDK (data engine)
 
-A one-line wrapper for every major AI framework. Installed once by a developer, it captures every agent action automatically: LLM calls, tool executions, file writes, API calls, shell commands, MCP operations. Each action is structured, attributed to an agent identity, and linked to a session. Immutable. Queryable.
+A one-line wrapper for every major AI framework. Installed once by a developer, it captures every agent action automatically: LLM calls, tool executions, file writes, API calls, shell commands, MCP operations. Each action is structured, attributed to an agent, and linked to a session. Immutable. Queryable.
 
 ```typescript
 // Before: no visibility
@@ -42,9 +42,9 @@ const client = trustixy.wrap(new Anthropic(), { project: "my-app", agent: "code-
 
 Built on top of SDK data:
 
-- **Developer view** — action timeline, session replay, cross-session search
-- **Security view** — attribution, anomaly detection, blast radius analysis, policy alerts
-- **Compliance view** — EU AI Act registry auto-populated from SDK data, risk classification, obligations checklist, compliance documents, prescriber co-signature
+- **Activity** — action timeline, session detail, cross-session search
+- **Agents** — one record per agent: SDK data + classification + obligations + document
+- **Compliance** — risk classification, obligations checklist, co-signed documents
 
 The compliance layer is not a separate product. It reads from the same action log the developers and security teams use.
 
@@ -53,17 +53,15 @@ The compliance layer is not a separate product. It reads from the same action lo
 ## Value Proposition by Audience
 
 ### For developers
-- Full session replay: see exactly what the agent saw, decided, and did
+- Action timeline: see exactly what every agent did, in sequence
 - Cross-session search: "which sessions touched `/api/payments.ts`?"
 - Debug without reconstructing from fragmented logs
-- Understand token usage and latency per action, not just per API call
+- Understand token usage and latency per action
 
 ### For security teams
 - Every resource change attributed: human vs agent, which agent, which session
-- Blast radius analysis: given a session ID, what was accessed or modified?
-- Anomaly detection: scope violations, unexpected file access, volume spikes
-- SIEM-compatible export (JSON, CEF)
-- Policy enforcement: define what agents are allowed to touch; alert on violations
+- Sensitive file alerts: instant notification when an agent accesses `.env`, secrets, or credentials
+- SIEM-compatible export (JSON)
 
 ### For compliance teams
 - Agent registry auto-populated from SDK data — no manual forms
@@ -71,7 +69,6 @@ The compliance layer is not a separate product. It reads from the same action lo
 - EU AI Act obligations checklist per system, trackable to completion
 - Compliance documents backed by a real operational evidence trail
 - Prescriber co-signature: human expert validates and signs, turning AI output into a professionally endorsed deliverable
-- Regulatory change alerts: automatic re-assessment triggers when EU AI Act updates affect registered systems
 
 ---
 
@@ -129,11 +126,17 @@ Co-signature is the bridge between AI-generated output and legally defensible co
 - SMEs using or building AI tools subject to EU AI Act
 
 ### Prescribers (distribution + co-signature)
+
+**External prescribers**
 - Accounting & audit firms
 - Law firms & legal tech consultants
 - IT service companies & integrators (ESN/SSII)
 - Industry federations & trade associations
 - Cloud & AI vendors
+
+**Internal prescribers**
+- Internal Compliance teams
+- Internal Security teams (CISO, InfoSec)
 
 ---
 
@@ -141,43 +144,33 @@ Co-signature is the bridge between AI-generated output and legally defensible co
 
 1. **Developer SDK** — npm + pip, wraps all major AI frameworks, Claude Code hooks, MCP
 2. **Action Audit Log** — every agent operation, immutable, structured, queryable
-3. **Session Replay** — step-by-step reconstruction of any agent session
-4. **Agent Registry** — auto-discovered from SDK, no manual entry
-5. **Anomaly Detection** — scope violations, unusual patterns, policy alerts
-6. **EU AI Act Compliance Registry** — auto-populated, versioned, never hard-deleted
-7. **Risk Classification** — confidence-scored, linked to regulatory version, pre-filled from SDK data
-8. **Obligations Checklist** — actionable tasks per system, trackable to completion
-9. **Compliance Documents** — AI-generated, disclaimer-embedded, backed by operational evidence
-10. **Prescriber Co-signature** — human validation layer, professionally endorsed deliverables
-11. **Regulatory Change Alerts** — automatic re-assessment on EU AI Act updates
+3. **Agents** — one concept: SDK data + EU AI Act compliance record, auto-discovered, never hard-deleted
+4. **Sensitive File Alert** — flags agent access to `.env`, secrets, and PEM files
+5. **Risk Classification** — 5 questions, pre-filled from SDK data, confidence-scored
+6. **Obligations Checklist** — checkbox per obligation, completion upgrades compliance status
+7. **Compliance Documents** — AI-generated, disclaimer-embedded, backed by operational evidence
+8. **Prescriber Co-signature** — scope acceptance at signup, co-signs all risk levels
 
 ---
 
 ## Revenue Models
 
-### SDK / Platform tiers (developer-led)
+### Platform tiers
 
 | Tier | Price | Limits |
 |---|---|---|
-| **Free** | €0 | 30-day log retention · 1 project · 1M actions/month · no replay |
-| **Pro** | €49/month | 1-year retention · unlimited projects · replay · anomaly detection |
-| **Enterprise** | Custom | Unlimited retention · SSO · SIEM export · SLA · API |
+| **Free** | €0 | 3 AI systems · 30-day log retention · unsigned documents |
+| **Pro** | €99/month | Unlimited systems · 1-year log retention · co-signature requests · full obligation tracking |
+| **Enterprise** | Custom | Unlimited retention · SSO · JSON export · SLA · API |
 
-### Compliance tiers (compliance-led)
-
-| Tier | Price | Limits |
-|---|---|---|
-| **Free** | €0 | 3 AI systems · unsigned documents with disclaimer |
-| **Pro** | €79/month | Unlimited systems · regulatory alerts · co-signature requests · full obligation tracking |
-| **Enterprise** | Custom | Org compliance report · API · advanced audit export · SLA |
+One plan covers both SDK visibility and compliance — no split billing.
 
 ### Prescriber channel (B2B2B)
 
-Three prescriber-led models — Trustixy is the infrastructure; the prescriber owns the client relationship.
+Two prescriber-led models — Trustixy is the infrastructure; the prescriber owns the client relationship.
 
 - **Per-act co-signature** — €25 commission/act; prescriber sets own fee (€150–500)
-- **Federation license** — €3 000–10 000/year flat contract with professional associations
-- **Integrator license** — €299–599/month subscription for ESN/SSII
+- **Integrator license** — €399/month flat; unlimited usage + API
 
 Full details: [`/specs/prescriber-partnership.md`](prescriber-partnership.md)
 
@@ -192,10 +185,10 @@ Open-source SDK components to maximize instrumentation reach. Developers install
 Once the SDK is in, security teams see value in the audit timeline. Compliance teams see their registry auto-populated. Upgrade from Free to Pro/Enterprise without re-instrumentation.
 
 ### Phase 3 — Prescriber channel (B2B2B)
-Activate the three prescriber models in parallel. Prescribers bring SME clients who need EU AI Act compliance. The registry is pre-populated from SDK data — making onboarding fast and the evidence trail credible.
+Activate per-act and integrator models. Prescribers bring SME clients who need EU AI Act compliance. The registry is pre-populated from SDK data — making onboarding fast and the evidence trail credible.
 
 ### Phase 4 — Platform and marketplace
-Marketplace listings (AWS, Azure, Google Cloud), embedded API for integrators, multi-regulation expansion (GDPR, NIS2, AI Liability Directive), SIEM integrations.
+Marketplace listings (AWS, Azure, Google Cloud), federation model, multi-regulation expansion (GDPR, NIS2, AI Liability Directive), full anomaly detection engine.
 
 ---
 
@@ -205,4 +198,4 @@ Marketplace listings (AWS, Azure, Google Cloud), embedded API for integrators, m
 * **One primary action per screen** — at any point, the user knows exactly what to do next
 * **Progressive disclosure** — audit timeline → replay → anomaly detection → compliance → co-signature
 * **Never block, always guide** — warnings help; hard blockers frustrate
-* **Mobile-compatible** — all critical flows must work on a phone
+* **Mobile-readable** — session list and alerts must be readable on a phone; full input is desktop-first

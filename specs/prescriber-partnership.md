@@ -2,12 +2,16 @@
 
 ## Strategic Rationale
 
-Rather than competing head-to-head with well-funded compliance platforms (Credo AI, Holistic AI, Fairly AI), Trustixy adopts a **B2B2B prescriber model**: selling through trusted intermediaries who already have relationships with SMEs needing EU AI Act compliance.
+Rather than competing head-to-head with well-funded compliance platforms (Credo AI, Holistic AI, Fairly AI), Trustixy adopts a **prescriber model** that works both externally (B2B2B through trusted advisors) and internally (top-down through in-house Compliance and Security teams).
+
+**External prescribers** are professional intermediaries — accounting firms, law firms, IT integrators — who already have relationships with SMEs needing EU AI Act compliance.
+
+**Internal prescribers** are Compliance officers and Security teams (CISO, InfoSec) within larger organizations, who act as the review and sign-off authority for their company's own AI systems.
 
 This model serves three purposes:
-1. **Distribution** — reduces customer acquisition cost by leveraging existing prescriber relationships
-2. **Trust** — inherits the prescriber's professional credibility
-3. **Legal validity** — prescriber co-signature transforms an AI-generated document into a professionally endorsed compliance deliverable
+1. **Distribution** — reduces customer acquisition cost by leveraging existing prescriber relationships (external) or top-down mandate (internal)
+2. **Trust** — inherits either the advisor's professional credibility or the internal team's organizational authority
+3. **Legal validity** — prescriber co-signature transforms an AI-generated document into a professionally endorsed or internally validated compliance deliverable
 
 ### Why the SDK makes the prescriber model stronger
 
@@ -79,21 +83,40 @@ Trustixy generates the compliance document, pre-filled from SDK operational data
 
 ---
 
-### 4. Industry Federations & Trade Associations
+### 4. Internal Compliance Teams
 **Why they prescribe:**
-- Actively seek tools to help SME members navigate new regulations
-- One partnership = access to thousands of SMEs
+- Already own the EU AI Act compliance mandate within their organization
+- Need a structured tool to document, classify, and sign off on all internal AI systems
+- Act as the single internal authority for review and validation — no external advisor needed
 
 **Value for them:**
-- Concrete, practical tool for members
-- Positions the federation as proactive on AI regulation
+- Centralized registry of all AI systems, auto-populated from SDK data
+- Review queue showing all pending documents across business units
+- Co-signature confirms they have reviewed every system — creates an internal audit trail
+- Dashboard gives CISO/DPO a live view of the organization's AI compliance posture
 
-**Partnership model:** Group license + co-branded portal  
-**Priority:** Medium — slower sales cycle but high volume
+**Partnership model:** Enterprise license (internal use) — no co-signature revenue, but platform adoption  
+**Priority:** High — natural top-down expansion within Enterprise accounts
 
 ---
 
-### 5. Cloud & AI Vendors (AWS, Azure, Google Cloud)
+### 5. Internal Security Teams (CISO, InfoSec)
+**Why they prescribe:**
+- Already review AI system deployments for security risk
+- EU AI Act obligations overlap with security and data governance concerns
+- Best positioned to validate that the described system behavior matches what the SDK actually captures
+
+**Value for them:**
+- SDK evidence aligns with existing security audit workflows
+- Co-signature scope matches their review mandate — they are not providing legal advice, just attesting to behavioral accuracy
+- Integrated into the same audit trail used for security incident investigation
+
+**Partnership model:** Enterprise license (internal use)  
+**Priority:** High — natural fit with security-led deployments; pairs with the Security team persona in product
+
+---
+
+### 6. Cloud & AI Vendors (AWS, Azure, Google Cloud)
 **Why they prescribe:**
 - Customers face compliance pressure; a compliance layer with SDK instrumentation is a strong marketplace differentiator
 
@@ -104,107 +127,78 @@ Trustixy generates the compliance document, pre-filled from SDK operational data
 
 ## Revenue Models
 
-Three economic models, all prescriber-led. Trustixy is the infrastructure; the prescriber owns the client relationship.
+Two economic models for v1, all prescriber-led. Trustixy is the infrastructure; the prescriber owns the client relationship.
 
 ---
 
-### Model 1 — Co-signature per acte (cabinets comptables, avocats, consultants)
+### Model 1 — Per-act co-signature (accounting firms, lawyers, consultants)
 
-Le prescripteur fixe lui-même le prix de chaque co-signature (€150–500). Trustixy prélève une commission fixe par acte signé.
+The prescriber sets their own co-signature price (€150–500). Trustixy charges a fixed commission per signed act.
 
-**Mécanique :**
-- Le prescripteur configure son tarif dans son portal (`cosignature_fee`)
-- Le client voit le tarif lors de sa demande
-- Paiement via Stripe Connect : le prescripteur reçoit directement, Trustixy prélève €25/acte
-- Si le client a le SDK installé, le document inclut un "Evidence Trail" — valeur perçue plus haute, tarif justifié
+**How it works:**
+- The prescriber configures their fee in their portal (`cosignature_fee`)
+- The client sees the fee at the time of their request
+- Payment via Stripe Connect: the prescriber receives directly, Trustixy takes €25 per act
+- If the client has the SDK installed, the document includes an evidence trail — higher perceived value, fee justified
 
-**Économie prescripteur :**
-- 20 clients × 2 co-signatures × €300 = €12 000/an
-- Trustixy : €25 × 40 actes = €1 000/an
+**Prescriber economics:**
+- 20 clients × 2 co-signatures × €300 = €12,000/year
+- Trustixy: €25 × 40 acts = €1,000/year
 
-**Profils ciblés :** cabinets comptables, avocats, consultants indépendants
-
----
-
-### Model 2 — Licence fédération (fédérations professionnelles, syndicats)
-
-Contrat annuel unique avec la fédération → accès à tous ses membres.
-
-**Mécanique :**
-- Contrat annuel : €3 000–10 000/an selon le nombre de membres
-- La fédération distribue à ses membres (accès Pro automatique)
-- Co-branding optionnel
-- Dashboard de conformité agrégé pour tous les membres
-
-**Objectif :** 5 fédérations à l'an 1 = €25 000–40 000 ARR
+**Target profiles:** accounting firms, lawyers, independent consultants
 
 ---
 
-### Model 3 — Licence intégrateur (ESN/SSII, intégrateurs AI)
+### Model 2 — Integrator license (IT service companies, ESN/SSII)
 
-Les intégrateurs livrent des projets AI. La conformité + SDK instrumentation devient une annexe standard du livrable.
+Integrators deliver AI projects. Compliance documentation and SDK instrumentation become a standard project deliverable.
 
-**Mécanique :**
-- Abonnement : €299–599/mois, usage illimité
-- L'intégrateur installe le SDK chez le client dans le cadre du projet
-- Le rapport de conformité sort sous la marque de l'intégrateur (white-label)
-- API légère : rapport générable depuis l'outil de gestion de projet de l'intégrateur
+**How it works:**
+- Subscription: €399/month flat, unlimited usage
+- The integrator installs the SDK at the client's site as part of the project
+- Compliance reports generated via API and delivered under the integrator's project scope
+- Per-act commissions stack on top when integrator clients request co-signature
 
-**Économie intégrateur :**
-- Abonnement Trustixy : €3 600–7 200/an
-- Facturation conformité client : €500–2 000 × projets/an
+**Integrator economics:**
+- Trustixy subscription: €4,788/year
+- Compliance billing to clients: €500–2,000 × projects/year
 
-**Objectif :** 10 intégrateurs à l'an 1 = €36 000–72 000 ARR
+**Target:** 10 integrators in year 1 = €47,880 ARR
 
 ---
 
 ## Partnership Tiers
 
-| Tier | Profil | Modèle | Revenu Trustixy | Co-signature |
+| Tier | Profile | Model | Trustixy revenue | Co-signature |
 |---|---|---|---|---|
-| **Per-act** | Cabinets, consultants | Commission €25/acte | Variable | Cœur du modèle |
-| **Fédération** | Fédérations, syndicats | Licence annuelle | €3 000–10 000/contrat | Optionnelle |
-| **Intégrateur** | ESN/SSII | Abonnement mensuel + API | €299–599/mois | Incluse dans livrable |
-| **Reseller** | Grands cabinets | Revente sous leur marque | 30% MRR | Recommandée |
+| **Per-act** | Accounting firms, lawyers, consultants | €25 commission per act | Variable | Core of the model |
+| **Integrator** | IT service companies (ESN/SSII) | Monthly subscription + API | €399/month flat | Included in project deliverable |
+| **Enterprise internal** | Internal Compliance and Security teams | Enterprise license | Per contract | Internal validation (no co-signature fee) |
 
 ---
 
 ## What Prescribers Get
 
-- **Autonomie tarifaire** — le prescripteur fixe ses prix (Model 1) ou intègre dans ses projets (Model 3)
-- **Stripe Connect** — encaissement direct (Model 1)
-- **Co-signature queue** — documents en attente de validation
-- **SDK Evidence** — chaque document lié à un agent SDK montre l'evidence trail, facilitant la revue
-- **Co-branding / white-label** — selon le tier
-- **Portal partenaire** avec dashboard de santé par client
-- **API projet** — génération de rapports depuis leur outillage (Model 3)
-- **Marketing assets** (pitch deck, one-pager, badge partenaire)
-- **Programme de certification** — pour valider leur capacité à co-signer
+- **Pricing autonomy** — prescriber sets their own fees (Model 1) or bundles into project pricing (Model 3)
+- **Stripe Connect** — direct payment collection (Model 1)
+- **Co-signature queue** — all documents awaiting review and validation
+- **SDK evidence** — every document linked to an SDK agent shows the evidence trail, making review faster and more defensible
+- **Partner portal** with per-client compliance health dashboard
+- **Project API** — generate reports from their own project management tools (Model 3)
+- **Marketing assets** — pitch deck, client one-pager, partner badge
+- **Certification program** — validates their capacity to co-sign
 
 ---
 
-## Prescriber Certification Program
+## Prescriber Certification
 
-### Two levels
+Scope acceptance is part of the partner signup form — no separate page or flow.
 
-**Level 1 — Scope Acceptance (15 minutes)**
-- Read the Co-signature Scope Document + checkbox acceptance
-- Unlocks co-signature for Minimal and Limited risk systems
-- Badge: "Scope-accepted review"
+During the partner application, the applicant reads the Co-signature Scope Document and checks an acceptance box. On approval, co-signature is immediately unlocked for all risk levels.
 
-**Level 2 — Full Certification (~90 minutes)**
-- 4 modules: EU AI Act risk levels, how to review a Trustixy classification + SDK evidence, co-signature responsibilities, sector quick-guides
-- 15-question assessment, 75% pass threshold, immediate retry
-- Unlocks all risk levels
-- Badge: "Certified AI Compliance Reviewer"
-- Valid 12 months; renewal: 20-min module + 5-question quiz
+The scope document defines what the co-signature confirms (classification review, professional judgment) and what it does not (legal guarantee, obligation implementation). It is versioned and stored with every co-signed document.
 
-### Module topics (Level 2)
-1. EU AI Act overview — structure, timeline, key definitions
-2. Risk classification — criteria and examples by sector
-3. Obligations by risk level
-4. How to review a Trustixy classification — what to verify, how to interpret SDK evidence
-5. Sector deep-dives — Healthcare, Finance, HR
+Full certification module (90-min) is deferred to v2.
 
 ---
 
@@ -230,44 +224,34 @@ Les intégrateurs livrent des projets AI. La conformité + SDK instrumentation d
 
 ### Target: 3 partners in 90 days
 
-**Month 1 — Identify & qualify**
-- Map 20 accounting firms and 10 IT integrators in France
-- Identify decision-makers
-- Prepare partner pitch deck (highlight SDK evidence trail as co-signature differentiator)
+**Month 1:** Map 20 accounting firms + 10 IT integrators in France. Identify decision-makers. Prepare partner pitch deck.
 
-**Month 2 — Pilot agreements**
-- Sign 3 pilot partners (2 accounting firms, 1 IT integrator)
-- Onboard their first client (co-delivery including SDK instrumentation + co-signature)
-- Gather feedback on review workflow and SDK evidence presentation
+**Month 2:** Sign 3 pilot partners (2 accounting firms, 1 IT integrator). Onboard their first client (SDK + co-signature co-delivery).
 
-**Month 3 — Validate & iterate**
-- Measure conversion rate from partner referral
-- Measure co-signature adoption rate
-- Refine commission structure
+**Month 3:** Measure referral conversion rate and co-signature adoption. Refine commission structure.
 
 ---
 
 ## Success Metrics
 
-| Métrique | Cible an 1 |
+| Metric | Year 1 target |
 |---|---|
-| Partenaires per-act actifs | 15 |
-| Fédérations sous contrat | 5 |
-| Intégrateurs sous licence | 10 |
-| Organisations acquises via prescripteurs | 200 |
-| % du revenu total via canal prescripteur | >70% |
-| Taux d'adoption co-signature | >40% des documents |
-| % de documents co-signés avec SDK evidence | >60% |
-| ARR canal prescripteur | >€120 000 |
+| Active per-act partners | 15 |
+| Integrators under license | 10 |
+| Organizations acquired via prescribers | 200 |
+| % of total revenue via prescriber channel | >70% |
+| Co-signature adoption rate | >40% of documents |
+| % of co-signed documents with SDK evidence | >60% |
+| Prescriber channel ARR | >€80,000 |
 
 ---
 
 ## Risks & Mitigations
 
-| Risque | Mitigation |
+| Risk | Mitigation |
 |---|---|
-| Partenaires peu actifs | Assets marketing clé-en-main + commission directe visible |
-| Réticence à co-signer | Scope document explicite, deux niveaux de certification, SDK evidence réduit l'ambiguïté |
-| SDK non installé chez les clients prescripteurs | L'intégrateur installe le SDK dans le cadre du projet — natural fit. Pour les autres tiers, co-signature sans SDK reste possible (avec disclaimer renforcé). |
-| Cycle de vente long pour les fédérations | Démarrer avec associations numériques (TECH IN France, Syntec Numérique) |
-| White-label dilue la marque Trustixy | Limiter white-label au tier Reseller et Intégrateur |
+| Inactive partners | Ready-to-use marketing assets + visible direct commission |
+| Reluctance to co-sign | Explicit scope document, two certification levels, SDK evidence reduces ambiguity |
+| SDK not installed at prescriber clients | The integrator installs the SDK as part of the project — natural fit. For other tiers, co-signature without SDK remains possible (with a stronger disclaimer). |
+| Long sales cycle for federations | Start with digital-first associations (TECH IN France, Syntec Numérique) |
+| White-label dilutes the Trustixy brand | Limit white-label to Reseller and Integrator tiers |

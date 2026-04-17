@@ -2,97 +2,38 @@
 
 ## Overview
 
-Trustixy runs a set of internal AI agents to monitor platform health, detect behavioral anomalies in customer agent sessions, track regulatory changes, and support the partner network. All are built with the Claude API and run as scheduled serverless functions.
+Trustixy runs internal AI agents for platform monitoring, customer success, and partner growth. All are built with the Claude API and run as scheduled serverless functions. Outputs are stored in `agent_logs` and surfaced via an internal admin dashboard.
 
 ---
 
-## Agent 1 — Anomaly Detection Agent
+## Agent 1 — Sensitive File Detector
 
-**Role:** Monitor all customer SDK sessions in real time, detect behavioral anomalies, and surface alerts.
+**Role:** Scan incoming action batches for access to credential and secret files, create alerts.
 
 ### What it does
 - Processes incoming action batches from the ingest API
-- Evaluates each session against the project's policy rules and the agent identity's behavioral baseline
-- Detects: unexpected scope access, sensitive file patterns, volume spikes, error rate spikes, exfiltration patterns, unusual shell commands
-- Creates `anomaly_detections` records with severity classification and structured evidence
-- Sends instant alerts for `high` and `critical` severity events (Slack webhook + email)
-- Maintains a rolling behavioral baseline per agent identity (session count, action type distribution, top affected resources)
+- Matches `affected_resources` against sensitive patterns: `**/.env`, `**/secrets/**`, `**/*.pem`, `**/credentials*`, `**/.ssh/**`
+- Creates `sensitive_file_alerts` records with `high` severity for every match
+- Sends instant email notification to the organization admin
 
 ### Triggers
-- Continuous processing (event-driven: fires on each ingest batch)
-- Nightly baseline recalculation for all active agent identities
+- Event-driven: fires on each ingest batch (no LLM involved — pure pattern matching)
 
 ### Inputs
 - Incoming action batches from the ingest API
-- Policy rules per project
-- Behavioral baseline per agent identity
 
 ### Outputs
-- `anomaly_detections` records
-- Instant alerts for high/critical severity
-- Daily anomaly digest per organization (emailed to admins)
+- `sensitive_file_alerts` records
+- Instant email notification for each new alert
 
-### Admin interaction
-- Users acknowledge or dismiss anomalies from the Anomaly Center
-- Users can adjust policy rules to tune sensitivity
+### No LLM needed
+Pattern matching only. Fast, deterministic, no LLM cost.
 
 ---
 
-## Agent 2 — Compliance Intelligence Tracker
+## Agent 2 — Platform Guardian
 
-**Role:** Monitor EU AI Act regulatory developments, assess their impact on registered systems, and keep the platform up to date.
-
-### What it does
-- Fetches and parses monitored sources (see Sources below)
-- Filters noise: press opinions, political statements, minor FAQs do not trigger action
-- Summarizes confirmed changes in plain language and assesses impact on registered AI systems
-- Runs regulatory impact assessment against each active AI system
-- Creates draft `regulatory_version` entries pending admin approval
-- Once approved: auto-creates `compliance_alerts` for affected systems, sets affected systems to `needs_review`
-- Flags when classification prompts or compliance document templates may need updating
-- Generates a weekly regulatory briefing for admin review
-
-### Triggers
-- Weekly (every Monday at 06:00 UTC)
-- Manual trigger from admin dashboard
-
-### Sources monitored
-
-**Primary (trigger regulatory_version creation):**
-- EUR-Lex RSS feed — official EU publications
-- European AI Office — official guidelines, enforcement decisions
-- CEN/CENELEC — harmonised technical standards for high-risk AI systems
-
-**Secondary (briefing only, no regulatory_version creation):**
-- EDPB — opinions on AI Act / GDPR intersection
-- Bird & Bird, Fieldfisher, Linklaters AI regulatory blogs
-- IAPP — AI compliance news
-- AlgorithmWatch, Politico Tech
-
-### Key regulatory deadlines (pre-seeded)
-
-| Date | Milestone |
-|---|---|
-| August 2024 | AI Act enters into force |
-| February 2025 | Prohibition on unacceptable-risk systems |
-| August 2025 | GPAI model obligations |
-| August 2026 | High-risk obligations (Annex III) |
-| August 2027 | High-risk obligations (Annex I) |
-
-### Outputs
-- Draft `regulatory_version` entries for admin approval
-- `compliance_alerts` per affected system (after admin approval)
-- Weekly regulatory briefing (admin review, optionally forwarded to partners)
-
-### Admin interaction
-- Admin reviews draft `regulatory_version` entries and approves, edits, or rejects
-- Admin can forward briefing to partners as a value-add communication
-
----
-
-## Agent 3 — Platform Guardian
-
-**Role:** Monitor platform health, detect operational anomalies, and ensure availability.
+**Role:** Monitor platform health, detect operational anomalies, ensure availability.
 
 ### What it does
 - Monitors API response times, error rates, LLM call failures
@@ -102,21 +43,17 @@ Trustixy runs a set of internal AI agents to monitor platform health, detect beh
 - Runs nightly smoke tests on critical flows (signup, SDK ingest, classify, generate doc)
 
 ### Triggers
-- Continuous monitoring (every 5 minutes for critical metrics)
+- Continuous (every 5 minutes for critical metrics)
 - Nightly full smoke test
 
 ### Outputs
-- Instant alert on critical failure
+- Instant alert on critical failure (Slack + email)
 - Daily platform health summary
 - Monthly cost and usage report
 
-### Admin interaction
-- Alerts via Slack/email with severity + suggested fix
-- Admin can trigger manual smoke test
-
 ---
 
-## Agent 4 — Customer Success Assistant
+## Agent 3 — Customer Success Assistant
 
 **Role:** Proactive, personalized support for users and partners.
 
@@ -124,7 +61,7 @@ Trustixy runs a set of internal AI agents to monitor platform health, detect beh
 - Tracks user milestones: SDK installed, first session ingested, first classification, first document generated
 - Detects SDK installed but no data flowing (misconfiguration)
 - Detects users who signed up but never installed the SDK
-- Detects compliance users stuck at classification
+- Detects compliance users who classified but never generated a document
 - Prepares a daily admin briefing: who to reach out to, who is at risk of churning
 - Drafts check-in messages for admin review and send
 
@@ -136,13 +73,9 @@ Trustixy runs a set of internal AI agents to monitor platform health, detect beh
 - Draft messages (admin reviews before sending)
 - Monthly churn risk report
 
-### Admin interaction
-- Prioritized daily action list
-- One-click approve and send for draft messages
-
 ---
 
-## Agent 5 — Partner Success Monitor
+## Agent 4 — Partner Success Monitor
 
 **Role:** Track partner activity and flag accounts that need attention.
 
@@ -159,16 +92,11 @@ Trustixy runs a set of internal AI agents to monitor platform health, detect beh
 
 ### Outputs
 - Daily alert for critical issues (partner churning, client stuck)
-- Weekly partner health summary
-- Suggested actions per partner
-
-### Admin interaction
-- Daily digest with one-click actions
-- Admin can snooze alerts per partner
+- Weekly partner health summary with suggested actions
 
 ---
 
-## Agent 6 — Prescriber Hunter
+## Agent 5 — Prescriber Hunter
 
 **Role:** Proactively identify and qualify new potential prescriber partners.
 
@@ -180,35 +108,29 @@ Trustixy runs a set of internal AI agents to monitor platform health, detect beh
 
 ### Triggers
 - Weekly
-- Also triggered when a new prescriber tier is added to the strategy
 
 ### Outputs
-- Weekly shortlist of 10 qualified prospects with outreach drafts
-
-### Admin interaction
-- Admin reviews and approves/rejects prospects
-- Admin approves outreach before sending
+- Weekly shortlist of 10 qualified prospects with outreach drafts (admin approves before sending)
 
 ---
 
-## Summary Table
+## Summary
 
 | Agent | Role | Frequency | Key Output |
 |---|---|---|---|
-| Anomaly Detection | Detect behavioral anomalies in customer sessions | Continuous | Anomaly records + alerts |
-| Compliance Intelligence Tracker | Track EU AI Act changes | Weekly | Regulatory briefing + platform impact |
+| Sensitive File Detector | Flag credential file access | Event-driven (per ingest) | Alerts + email |
 | Platform Guardian | Monitor uptime & costs | Continuous / Nightly | Incident alerts + health summary |
 | Customer Success Assistant | Proactive user & partner support | Daily | Focus list + draft messages |
-| Partner Success Monitor | Track partner health | Daily / Weekly | Partner health report + action alerts |
-| Prescriber Hunter | Find & qualify new partners | Weekly | 10 qualified prospects + outreach drafts |
+| Partner Success Monitor | Track partner health | Daily / Weekly | Partner health report |
+| Prescriber Hunter | Find & qualify new partners | Weekly | 10 prospects + outreach drafts |
 
 ---
 
 ## Technical Approach
 
-- All agents built with **Claude API** (claude-opus-4-6 for reasoning-heavy tasks, claude-haiku-4-5 for lightweight monitoring)
+- Sensitive File Detector: pure pattern matching, no LLM
+- All other agents: **Claude API** (`claude-sonnet-4-6` for reasoning tasks, `claude-haiku-4-5` for lightweight monitoring)
 - Run as **scheduled serverless functions** (Vercel Cron or Supabase Edge Functions)
-- Agent outputs stored in `agent_logs` table
-- Anomaly Detection Agent also writes to `anomaly_detections`
-- Admin interactions via lightweight **Admin Dashboard** (internal Next.js route, protected)
-- Alerts via **Slack webhook** and/or **email** (Resend or SendGrid)
+- All outputs stored in `agent_logs` table
+- Alerts via **Slack webhook** and **email** (Resend or SendGrid)
+- Admin interactions via internal Next.js admin route (protected)

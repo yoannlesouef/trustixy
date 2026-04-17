@@ -47,27 +47,31 @@ Authentication: `Authorization: Bearer txk_live_...` (SDK token)
 
 ```
 POST   /projects                                — create a project
-GET    /projects                                — list all projects for the organization
+GET    /projects                                — list projects for the organization
 GET    /projects/:id                            — project details + stats
-PUT    /projects/:id                            — update project name/description
+PUT    /projects/:id                            — update project
 DELETE /projects/:id                            — archive project
 ```
 
 ## SDK Tokens
 
 ```
-POST   /projects/:id/tokens                     — create an SDK token (returns raw token once)
-GET    /projects/:id/tokens                     — list tokens (name, last_used_at, status)
-DELETE /projects/:id/tokens/:tid                — revoke a token
+POST   /projects/:id/tokens                     — create token (returns raw token once)
+GET    /projects/:id/tokens                     — list tokens
+DELETE /projects/:id/tokens/:tid                — revoke token
 ```
 
-## Agent Identities
+---
+
+## Agents
+
+One resource. Covers both SDK data and compliance record.
 
 ```
-GET    /projects/:id/agents                     — list discovered agent identities
-GET    /projects/:id/agents/:aid                — agent details + usage stats
-PUT    /projects/:id/agents/:aid                — update name, link to ai_system
-POST   /projects/:id/agents/:aid/register       — promote discovered agent to compliance registry
+GET    /agents                                  — list all agents for the organization
+GET    /agents/:id                              — agent details + SDK stats + compliance status
+PUT    /agents/:id                              — update name, description, use_case, data_used, autonomy_level, owner, sector
+DELETE /agents/:id                              — archive agent (soft delete)
 ```
 
 ---
@@ -75,89 +79,51 @@ POST   /projects/:id/agents/:aid/register       — promote discovered agent to 
 ## Sessions
 
 ```
-GET    /projects/:id/sessions                   — list sessions (filterable by agent, time, status, human_identity)
-GET    /projects/:id/sessions/:sid              — session details + action summary
-GET    /projects/:id/sessions/:sid/actions      — full ordered action list for session
-GET    /projects/:id/sessions/:sid/replay       — replay-formatted session: context + decision + action + outcome per step
+GET    /agents/:id/sessions                     — sessions for this agent
+GET    /sessions/:sid                           — session details + action summary
+GET    /sessions/:sid/actions                   — full ordered action list
 ```
 
 ## Actions
 
 ```
-GET    /projects/:id/actions                    — list all actions (filterable by type, resource, agent, time range, status)
-GET    /projects/:id/actions/:aid               — single action details
-GET    /projects/:id/actions/by-resource        — actions that touched a specific resource path
-                                                  query: ?resource=/src/payments.ts
+GET    /agents/:id/actions                      — all actions for this agent (filterable)
+GET    /actions/:aid                            — single action details
 ```
 
 ---
 
-## Anomaly Detection
+## Sensitive File Alerts
 
 ```
-GET    /projects/:id/anomalies                  — list anomaly detections (filterable by severity, type, status)
-GET    /projects/:id/anomalies/:anid            — anomaly details + linked session/action
-POST   /projects/:id/anomalies/:anid/acknowledge — acknowledge anomaly
-POST   /projects/:id/anomalies/:anid/dismiss    — dismiss anomaly
-```
-
-## Policy Rules
-
-```
-GET    /projects/:id/policies                   — list policy rules
-POST   /projects/:id/policies                   — create a policy rule
-PUT    /projects/:id/policies/:pid              — update a rule
-DELETE /projects/:id/policies/:pid              — delete a rule
+GET    /alerts                                  — list alerts (filterable by status, agent)
+GET    /alerts/:alid                            — alert details + linked session/action
+POST   /alerts/:alid/acknowledge                — acknowledge
+POST   /alerts/:alid/dismiss                    — dismiss
 ```
 
 ---
-
-## Identification Wizard
-
-```
-POST   /wizard/analyze                          — submit tool checklist + sector; returns suggested systems
-POST   /wizard/confirm                          — batch-create confirmed systems from wizard suggestions
-GET    /wizard/tool-catalog                     — known AI tools organized by category and sector
-```
-
-## Description Quality
-
-```
-POST   /ai-systems/:id/check-description        — run description quality check; returns score and suggestions
-```
-
----
-
-## AI Systems (Compliance Registry)
-
-```
-POST   /ai-systems                              — create a new AI system (manual entry)
-GET    /ai-systems                              — list all systems with current compliance_status
-GET    /ai-systems/:id                          — system details + linked agent identity + SDK stats
-PUT    /ai-systems/:id                          — update system
-DELETE /ai-systems/:id                          — archive system (soft delete)
-```
 
 ## Classification
 
 ```
-POST   /ai-systems/:id/classify                 — run a new classification
-GET    /ai-systems/:id/classifications          — full classification history
-GET    /ai-systems/:id/classifications/current  — latest classification with confidence + obligations
+POST   /agents/:id/classify                     — run classification
+GET    /agents/:id/classifications              — classification history
+GET    /agents/:id/classifications/current      — current classification + confidence + obligations
 ```
 
 ## Obligations
 
 ```
-GET    /ai-systems/:id/obligations              — current obligations checklist
-PUT    /ai-systems/:id/obligations/:oid         — update obligation status
+GET    /agents/:id/obligations                  — current obligations checklist
+PUT    /agents/:id/obligations/:oid             — update done status (body: { done: true })
 ```
 
 ## Compliance Status
 
 ```
-GET    /ai-systems/:id/compliance-status        — current status, last classification, pending alerts
-GET    /organizations/:id/compliance-dashboard  — org-level summary
+GET    /agents/:id/compliance-status            — status + last classification date
+GET    /organizations/:id/compliance-summary    — org-level count by status
 ```
 
 ---
@@ -165,16 +131,16 @@ GET    /organizations/:id/compliance-dashboard  — org-level summary
 ## Documents
 
 ```
-POST   /ai-systems/:id/documents                — generate document for current classification
-GET    /ai-systems/:id/documents                — list all document versions
-GET    /ai-systems/:id/documents/current        — current document
-GET    /ai-systems/:id/documents/:did           — specific historical document
+POST   /agents/:id/documents                    — generate document for current classification
+GET    /agents/:id/documents                    — list all versions
+GET    /agents/:id/documents/current            — current document
+GET    /agents/:id/documents/:did               — specific historical version
 ```
 
 ## Document Co-signature
 
 ```
-POST   /documents/:id/signature/request         — request co-signature from prescriber partner
+POST   /documents/:id/signature/request         — request co-signature
 GET    /documents/:id/signature                 — current signature status
 POST   /documents/:id/signature/approve         — prescriber approves and signs
 POST   /documents/:id/signature/request-changes — prescriber requests changes
@@ -183,57 +149,27 @@ POST   /documents/:id/signature/decline         — prescriber declines
 
 ---
 
-## Audit Logs (Platform-level)
+## Audit Logs
 
 ```
-GET    /ai-systems/:id/audit-logs               — compliance audit trail for a system
-GET    /organizations/:id/audit-logs            — org-level compliance audit trail
-```
-
----
-
-## Regulatory Versions
-
-```
-GET    /regulatory-versions                     — list all tracked regulatory versions
-GET    /regulatory-versions/latest              — latest EU AI Act version in effect
-GET    /regulatory-versions/:id                 — details + affected use cases
-```
-
-## Compliance Alerts
-
-```
-GET    /organizations/:id/alerts                — all alerts for the organization
-GET    /ai-systems/:id/alerts                   — alerts specific to a system
-POST   /ai-systems/:id/alerts/:aid/acknowledge  — acknowledge an alert
-POST   /ai-systems/:id/alerts/:aid/dismiss      — dismiss an alert
+GET    /agents/:id/audit-logs                   — compliance audit trail for an agent
+GET    /organizations/:id/audit-logs            — org-level audit trail
 ```
 
 ---
-
-## Prescriber Certification
-
-```
-GET    /partners/:id/certification              — current certification status and expiry
-POST   /partners/:id/certification/start        — start certification training
-POST   /partners/:id/certification/complete     — submit quiz answers
-POST   /partners/:id/certification/renew        — start renewal module
-GET    /partners/:id/cosignature-scope          — current co-signature scope document
-POST   /partners/:id/cosignature-scope/accept   — prescriber accepts scope document
-```
 
 ## Partners
 
 ```
-POST   /partners                                — apply to become a partner
-GET    /partners/:id                            — partner profile (is_certified, certification expiry)
-PUT    /partners/:id                            — update white-label config, settings
+POST   /partners                                — apply to become a partner (includes scope acceptance)
+GET    /partners/:id                            — partner profile
+PUT    /partners/:id                            — update partner settings
 ```
 
 ## Partner Clients
 
 ```
-GET    /partners/:id/clients                    — list clients with compliance health summary
+GET    /partners/:id/clients                    — list clients with compliance health
 POST   /partners/:id/clients/invite             — invite a client organization
 DELETE /partners/:id/clients/:clientId          — remove a client
 ```
@@ -241,8 +177,26 @@ DELETE /partners/:id/clients/:clientId          — remove a client
 ## Partner Co-signature Queue
 
 ```
-GET    /partners/:id/signature-requests         — pending documents awaiting co-signature
-GET    /partners/:id/signature-requests/:did    — review a specific document before signing
+GET    /partners/:id/signature-requests         — pending documents awaiting review
+GET    /partners/:id/signature-requests/:did    — review a specific document
+```
+
+## Partner Billing (Per-act)
+
+```
+PUT    /partners/:id/billing                    — set cosignature_fee + connect Stripe
+GET    /partners/:id/billing/transactions       — transaction history
+POST   /partners/:id/billing/stripe-connect     — initiate Stripe Connect onboarding
+```
+
+## Integrator Projects
+
+```
+POST   /integrator/projects                     — create a client project
+GET    /integrator/projects                     — list projects
+GET    /integrator/projects/:id                 — project details + compliance summary
+POST   /integrator/projects/:id/report          — generate PDF compliance report
+GET    /integrator/projects/:id/report          — retrieve latest report
 ```
 
 ## Organizations
@@ -255,41 +209,11 @@ PUT    /organizations/:id                       — update organization
 
 ---
 
-## Partner Billing (Model 1 — Per-act Co-signature)
-
-```
-PUT    /partners/:id/billing                    — set cosignature_fee + connect Stripe account
-GET    /partners/:id/billing/transactions       — list co-signature transactions
-POST   /partners/:id/billing/stripe-connect     — initiate Stripe Connect onboarding
-```
-
-## Federations (Model 2)
-
-```
-POST   /federations/:id/members                 — add member organization
-GET    /federations/:id/members                 — list member organizations
-DELETE /federations/:id/members/:orgId          — remove member
-GET    /federations/:id/compliance-summary      — aggregate compliance health
-```
-
-## Integrator Projects (Model 3)
-
-```
-POST   /integrator/projects                     — create a client project
-GET    /integrator/projects                     — list all projects
-GET    /integrator/projects/:id                 — project details + compliance summary
-POST   /integrator/projects/:id/report          — generate white-labeled PDF compliance report
-GET    /integrator/projects/:id/report          — retrieve latest generated report
-```
-
----
-
 ## Export
 
 ```
-GET    /projects/:id/sessions/:sid/export/pdf   — session replay as PDF report
-GET    /projects/:id/actions/export             — action log export (JSON or CSV); query: ?format=csv&from=...&to=...
-GET    /projects/:id/anomalies/export           — anomaly export (JSON or CEF)
-GET    /ai-systems/:id/audit-logs/export        — compliance audit trail (PDF or CSV)
+GET    /agents/:id/actions/export               — action log (JSON or CSV)
+GET    /alerts/export                           — sensitive file alerts (JSON)
+GET    /agents/:id/audit-logs/export            — compliance audit trail (PDF or CSV)
 GET    /organizations/:id/compliance-report     — full org compliance report PDF
 ```

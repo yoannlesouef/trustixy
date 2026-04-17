@@ -12,9 +12,9 @@ AI Action Audit Platform — for developers, security teams, and compliance offi
 
 * Primary: #0F172A (dark blue)
 * Accent: #3B82F6 (blue)
-* Success: #10B981 (green — compliant states, replay confirmed)
-* Warning: #F59E0B (amber — anomaly flags, needs review)
-* Danger: #EF4444 (red — unacceptable risk, critical anomaly)
+* Success: #10B981 (green — compliant status, obligations complete)
+* Warning: #F59E0B (amber — needs review, sensitive file alert)
+* Danger: #EF4444 (red — unacceptable risk, critical alert)
 * Background: #F9FAFB
 
 ## Tone
@@ -30,10 +30,3 @@ AI Action Audit Platform — for developers, security teams, and compliance offi
 * "Audit logs for AI agents." — developer-facing
 * "Your AI compliance, backed by real data." — compliance-facing
 * "The compliance platform your clients can sign." — partner-facing (highlights co-signature)
-
-## Co-branding (Reseller & Integrator tiers)
-
-* Partners can replace the Trustixy logo with their own
-* Custom domain support (e.g. compliance.partnerfirm.com)
-* Primary color customizable; secondary colors follow partner brand
-* "Powered by Trustixy" badge optional per partner agreement
