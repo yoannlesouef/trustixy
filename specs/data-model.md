@@ -110,6 +110,11 @@ Single table. Merges what was previously `agent_identities` (SDK) and `ai_system
 * name (text)
 * sector (text) — `healthcare` | `finance` | `hr` | `legal` | `education` | `retail` | `manufacturing` | `public` | `other`
 * plan (text) — `free` | `pro` | `enterprise` | `integrator`
+* stripe_customer_id (text) — nullable; set on first checkout
+* stripe_subscription_id (text) — nullable
+* subscription_status (text) — `active` | `past_due` | `canceled` | `trialing` | null
+* current_period_end (timestamp) — nullable
+* default_payment_method_id (text) — nullable; used for per-act co-signature charges
 * created_at (timestamp)
 
 ### users

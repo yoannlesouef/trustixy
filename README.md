@@ -113,6 +113,12 @@ One plan covers both SDK visibility and compliance — no split billing.
 | LLM prompts | `specs/llm-prompts.md` |
 | Internal agents | `specs/ai-agents.md` |
 | Prescriber partnership | `specs/prescriber-partnership.md` |
+| Auth | `specs/auth.md` |
+| Row Level Security | `specs/rls.md` |
+| Infrastructure & project structure | `specs/infra.md` |
+| Stripe integration | `specs/stripe.md` |
+| PDF generation | `specs/pdf.md` |
+| Error handling | `specs/errors.md` |
 | Email sequences | `specs/emails.md` |
 | SEO & content strategy | `specs/content/seo.md` |
 | Partner landing page | `specs/content/partner-landing.md` |
