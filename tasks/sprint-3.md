@@ -64,10 +64,12 @@ Spec refs: `specs/auth.md` · `specs/infra.md` · `specs/api.md` · `specs/strip
 - [ ] SHA-256 hash token; look up `sdk_tokens` (service role, bypass RLS)
 - [ ] 401 if token not found or `revoked_at IS NOT NULL`
 - [ ] Call `check_rate_limit(token_id, 100)` RPC → 429 with `Retry-After: 60` if false
+- [ ] Check `organizations.actions_this_month` against plan limit (Free: 50k) → 402 with `{ "error": "plan_limit", "limit": "actions" }` if exceeded
 - [ ] Validate request body: max 100 actions, max 1MB
 - [ ] Upsert session record
 - [ ] Bulk insert actions
 - [ ] Single UPDATE on agent: `last_seen_at`, `total_sessions`, `total_actions`
+- [ ] Increment `organizations.actions_this_month` by action count (atomic UPDATE)
 - [ ] Auto-create agent record if slug not seen before (`first_seen_at = now()`)
 - [ ] Sensitive file pattern matching on `affected_resources` — patterns: `**/.env`, `**/secrets/**`, `**/*.pem`, `**/credentials*`, `**/.ssh/**`
 - [ ] If matches: insert `sensitive_file_alerts` (severity: `high`)

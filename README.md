@@ -80,11 +80,13 @@ Install SDK (3-line snippet)
 
 For organizations using the platform. One plan covers both SDK visibility and compliance — no split billing.
 
-| Plan | Price | What's included |
-|---|---|---|
-| **Free** | €0 | 3 agents · 30-day log · unsigned documents |
-| **Pro** | €99/month | Unlimited agents · 1-year log · co-signature requests · full obligation tracking |
-| **Enterprise** | Custom | Unlimited retention · SSO · JSON export · SLA · API |
+| Plan | Price | Agents | Actions | Retention |
+|---|---|---|---|---|
+| **Free** | €0 | 3 | 50k/month | 30 days |
+| **Pro** | €99/month | Unlimited | 1M/month | 1 year |
+| **Enterprise** | Custom | Unlimited | Unlimited | Unlimited |
+
+One plan covers both SDK visibility and compliance — no split billing. Pro includes co-signature requests and full obligation tracking.
 
 ---
 

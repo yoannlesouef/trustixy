@@ -159,13 +159,17 @@ Co-signature is the bridge between AI-generated output and legally defensible co
 
 ### Platform tiers
 
-| Tier | Price | Limits |
-|---|---|---|
-| **Free** | €0 | 3 AI systems · 30-day log retention · unsigned documents |
-| **Pro** | €99/month | Unlimited systems · 1-year log retention · co-signature requests · full obligation tracking |
-| **Enterprise** | Custom | Unlimited retention · SSO · JSON export · SLA · API |
+| Tier | Price | Agents | Actions | Retention |
+|---|---|---|---|---|
+| **Free** | €0 | 3 | 50k/month | 30 days |
+| **Pro** | €99/month | Unlimited | 1M/month included | 1 year |
+| **Enterprise** | Custom | Unlimited | Unlimited | Unlimited |
 
 One plan covers both SDK visibility and compliance — no split billing.
+
+**Pro volume:** 1M actions/month is sufficient for most teams (5–20 agents running in production). Orgs consistently exceeding this are prompted to contact sales for Enterprise. No hard cutoff at v1 — alert at 80% usage.
+
+**Profitability rationale:** LLM costs (classification ~€0.003/agent, document ~€0.015/doc) are negligible at €99/month. The main cost driver is action storage and retention. The 1M/month cap protects margins while covering the vast majority of SME use cases. The Free tier is limited to 50k actions/month — realistic for evaluation, insufficient for production.
 
 ### Prescriber channel (B2B2B)
 

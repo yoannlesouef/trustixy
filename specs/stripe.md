@@ -8,6 +8,18 @@ Two distinct Stripe integrations:
 
 ---
 
+## Plan Limits
+
+| Tier | Price | Agents | Actions/month | Retention |
+|---|---|---|---|---|
+| Free | €0 | 3 | 50k | 30 days |
+| Pro | €99/month | Unlimited | 1M included | 1 year |
+| Enterprise | Custom | Unlimited | Unlimited | Unlimited |
+
+Action volume is tracked in `organizations.actions_this_month` (reset monthly via cron). Alert at 80% (800k), prompt to contact sales at 100% — no hard block at v1.
+
+---
+
 ## Products & Prices to Create in Stripe Dashboard
 
 | Product | Price ID env var | Amount | Interval | Metadata |
@@ -111,8 +123,13 @@ export async function requirePro(organizationId: string) {
 
 **Free plan limits:**
 - Max 3 agents: checked on agent creation
+- 50k actions/month: checked on ingest; return 402 with `"plan_limit": "actions"` when exceeded
 - 30-day session retention: enforced via Supabase scheduled job (delete sessions older than 30 days where org is on free plan — runs nightly)
 - Co-signature requests: blocked server-side, returns 402
+
+**Pro plan limits:**
+- 1M actions/month included: tracked in `organizations.actions_this_month`; alert email sent at 800k; no hard block at v1
+- Monthly counter reset: Supabase cron on the 1st of each month sets `actions_this_month = 0`
 
 **Grace period:** When `subscription_status = past_due`, grant 7-day grace period before downgrading access. Send payment failure email on day 1, reminder on day 5.
 

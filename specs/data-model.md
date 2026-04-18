@@ -119,6 +119,7 @@ Single table. Merges what was previously `agent_identities` (SDK) and `ai_system
 * current_period_end (timestamp) — nullable
 * default_payment_method_id (text) — nullable; used for per-act co-signature charges
 * grace_period_ends_at (timestamp) — nullable; set to `past_due date + 7 days` when payment fails; access downgraded when this passes
+* actions_this_month (integer) — default 0; incremented on ingest; reset to 0 on 1st of each month by cron; used to enforce Free (50k) and alert Pro (1M) limits
 * created_at (timestamp)
 
 ### users
