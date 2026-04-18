@@ -138,23 +138,7 @@ Click any client to see all their registered systems, classification dates, risk
 
 ---
 
-## 8. Managing Projects (Integrator Model)
-
-### Create a project
-1. Partner Portal → **Projects → New project**
-2. Enter project name and link to a client organization
-
-### Generate a compliance report
-Once the client has classified their AI systems:
-1. Open the project → click **Generate compliance report**
-2. Download the PDF and include it in your project deliverables
-
-### API access
-Your integrator license includes API access to automate report generation. See `specs/api.md` for the `/integrator/projects` endpoints.
-
----
-
-## 9. Marketing Assets
+## 8. Marketing Assets
 
 Download from **Settings → Marketing assets**:
 - Partner pitch deck (editable)
@@ -166,7 +150,7 @@ Download from **Settings → Marketing assets**:
 
 ---
 
-## 10. Frequently Asked Questions
+## 9. Frequently Asked Questions
 
 **What if I disagree with the AI classification?**
 Request changes and explain why. Your professional judgment always takes precedence.

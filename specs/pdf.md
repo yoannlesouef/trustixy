@@ -93,39 +93,8 @@ On co-signed documents, the disclaimer is still present but a second block is ad
 ### Footer (every page)
 
 ```
-Document ID: [uuid]  ·  Version [N]  ·  Generated [date]  ·  trustixy.com/verify/[doc-id]
+Document ID: [uuid]  ·  Version [N]  ·  Generated [date]  ·  trustixy.com
 ```
-
----
-
-## Verification Page (`/verify/[docId]`)
-
-Public page, no auth required. Indexed by search engines.
-
-**URL:** `trustixy.com/verify/[doc-id]`
-
-**Displays:**
-- Organization name
-- Agent name
-- Risk level badge
-- Classification date
-- Document version
-- Status: `Active` | `Superseded` | `Revoked`
-- Co-signer name and firm (if co-signed) — displayed as: "Professionally reviewed by [Name], [Firm] on [date]"
-- "Compliance documentation powered by [Trustixy →]" CTA
-
-**Does NOT display:**
-- Document content
-- Obligations list
-- SDK session data
-- Any personal data beyond the co-signer's name and firm (which they consent to by co-signing)
-
-API endpoint for the verification page:
-```
-GET /api/v1/verify/[docId]    — public, no auth, returns verification fields only
-```
-
-This endpoint is separate from the authenticated `GET /agents/:id/documents/:did` — it returns a strict subset of fields.
 
 ---
 

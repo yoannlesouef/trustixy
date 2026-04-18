@@ -23,6 +23,19 @@ Full SDK reference: [`/specs/sdk.md`](sdk.md)
 
 Every action taken by every agent, structured and immutable.
 
+### Session lifecycle
+
+Sessions are server-managed — the SDK does not call an endpoint to close them.
+
+| Status | Set when |
+|---|---|
+| `running` | First ingest batch received for this session |
+| `completed` | No ingest received for 15 minutes after last batch |
+| `error` | Final action in the session has `status = error` |
+| `timeout` | Session open for >24 hours without activity |
+
+The Platform Guardian cron (every 5 min) handles the `running → completed/timeout` transitions.
+
 ### Captured per action
 
 * `agent_id` — which agent
@@ -82,14 +95,29 @@ Pattern matching on `affected_resources`. No LLM involved.
 * **5 questions** (most pre-filled, all editable): use case, affected population, human override, data sensitivity, deployment context
 * LLM classification against current EU AI Act version
 * Stores: risk level · explanation · confidence score · regulatory version
-* Classification history preserved per agent
+* Classification history preserved per agent (`is_current` flag; server sets old classification to `is_current = false` on new classification)
 * Low-confidence warning (<70%): invitation to request expert review — not a blocker
+
+### Reclassification
+
+When a user clicks [Reclassify]:
+1. A new classification is created; previous set to `is_current = false`
+2. Previous obligations are soft-archived (`archived_at = now()`)
+3. New obligations checklist generated from new classification
+4. If a co-signed document existed: `signature_status` reset to `unsigned` — the old co-signature is preserved as a historical record but the agent is no longer co-signed
+5. Audit log entry: `classify`
+
+### Expert review request
+
+When confidence score < 70%, the agent page shows: *"Consider requesting expert review from your prescriber partner."*
+Clicking [Request review] sends an email notification to the linked prescriber (if any) with a link to the document. No separate table — this is a one-time email trigger, not a queued workflow in v1.
 
 ---
 
 ## Obligations Checklist
 
-* Generated from each classification
+* Generated from each classification — **only for Limited, High, and Unacceptable risk**
+* Minimal risk → shows "No specific obligations under the EU AI Act" message instead
 * Each item: title · description · implementation guide · regulatory reference · `done` checkbox
 * Top 3 shown by default — "Show all X" toggle
 * Completion count visible on agent page and dashboard
@@ -100,7 +128,17 @@ Pattern matching on `affected_resources`. No LLM involved.
 
 ## Compliance Status
 
-* Per-agent badge: `Compliant` | `Needs attention` | `Not assessed`
+DB value → UI display mapping:
+
+| `compliance_status` | UI badge | Color |
+|---|---|---|
+| `unclassified` | Not assessed | Grey |
+| `needs_review` | Needs attention | Amber |
+| `at_risk` | At risk | Red |
+| `compliant` | Compliant | Green |
+
+`at_risk` is set manually by a platform admin or future automation. `needs_review` is auto-set when description is updated post-classification or when `last_classified_at < now() - 12 months` (nightly Supabase job).
+
 * Organization summary: count by status
 * Partner portal shows health per client organization
 
@@ -124,6 +162,8 @@ Pattern matching on `affected_resources`. No LLM involved.
 * On approval: prescriber name, firm, date embedded in document
 * Optional professional notes — included as "Reviewer Comments"
 * No linked prescriber → "Download with disclaimer" fallback
+* **Free plan:** co-signature button not shown at all (not a paywall modal)
+* **Pro plan:** co-signature button shown; requires a linked prescriber partner
 
 ### Certification
 
@@ -133,31 +173,27 @@ When applying to become a partner, the applicant reads and accepts the Co-signat
 
 ---
 
-## Viral Loop — Document Verification
+## PDF Footer
 
-Every co-signed PDF is a distribution asset. Two mechanisms:
+Every generated PDF (signed and unsigned) includes a non-removable footer:
 
-### Footer badge on PDF
+> *"Compliance record managed with Trustixy · trustixy.com"*
 
-Every generated PDF (signed and unsigned) includes a footer:
+Enterprise plan can white-label (no footer).
 
-> *"Compliance record managed with Trustixy · trustixy.com/verify/[doc-id]"*
+---
 
-This is non-removable on Free and Pro plans. Enterprise can white-label (no badge).
+## Feedback & Community
 
-### Verification page (`/verify/[doc-id]`)
+Full spec: [`/specs/feedback-community.md`](feedback-community.md)
 
-Public page, no login required. Displays:
-- Organization name
-- Agent name
-- Risk level + classification date
-- Co-signer name and firm (if co-signed)
-- Document status: `active` | `superseded` | `revoked`
-- "Generated with Trustixy" CTA → trustixy.com
+In-app feedback board accessible to all authenticated users at `/feedback`.
 
-Target audience: auditors, regulators, procurement teams receiving the document. CTA converts to awareness and potential signups.
-
-No sensitive data exposed on this page — only the fields listed above.
+* Users submit bugs or enhancement proposals (type + title + description)
+* Users upvote any item (one vote per user, togglable)
+* Platform admin manages status (`Open` → `Planned` → `In Progress` → `Done` | `Declined`) and posts team responses
+* Admin can push any item to GitHub as an issue (labeled `community` + type) via GitHub API — works on private repos
+* Optional community social link (Discord, Telegram, etc.) set by platform admin; hidden from UI when not configured
 
 ---
 

@@ -189,22 +189,29 @@ GET    /partners/:id/billing/transactions       — transaction history
 POST   /partners/:id/billing/stripe-connect     — initiate Stripe Connect onboarding
 ```
 
-## Integrator Projects
-
-```
-POST   /integrator/projects                     — create a client project
-GET    /integrator/projects                     — list projects
-GET    /integrator/projects/:id                 — project details + compliance summary
-POST   /integrator/projects/:id/report          — generate PDF compliance report
-GET    /integrator/projects/:id/report          — retrieve latest report
-```
-
 ## Organizations
 
 ```
 POST   /organizations                           — create organization
 GET    /organizations/:id                       — organization details
 PUT    /organizations/:id                       — update organization
+```
+
+---
+
+## Feedback
+
+```
+GET    /feedback                                — list all feedback items (sorted by votes desc; filterable by type, status)
+POST   /feedback                                — submit a new feedback item (body: { type, title, description })
+POST   /feedback/:id/vote                       — toggle vote on an item (inserts or deletes from feedback_votes)
+GET    /feedback/:id                            — item detail + admin response + vote count
+```
+
+Admin only:
+```
+PATCH  /feedback/:id                            — update status or admin_response (body: { status?, admin_response? })
+POST   /feedback/:id/github-issue               — push to GitHub; creates issue, stores github_issue_url
 ```
 
 ---

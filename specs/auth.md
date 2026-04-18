@@ -169,12 +169,68 @@ Platform admin accounts are created manually via Supabase dashboard — no self-
 
 The ingest endpoint (`POST /api/v1/ingest`) does **not** use Supabase JWTs. It uses SDK tokens.
 
+**Hashing: SHA-256, not bcrypt.** API tokens are long random strings — they don't need bcrypt's slowness (which is designed for short user passwords). SHA-256 takes <1ms and is the industry standard for API token hashing (GitHub, Stripe, Linear all use it).
+
 Validation:
 1. Extract `Authorization: Bearer txk_live_[token]` header
-2. Hash the raw token with bcrypt
+2. Hash with SHA-256: `createHash('sha256').update(rawToken).digest('hex')`
 3. Look up `sdk_tokens` where `token_hash = hash AND revoked_at IS NULL`
 4. If not found → 401
-5. If found → attach `project_id` to request context
-6. Update `sdk_tokens.last_used_at`
+5. If found → attach `project_id` and `token_id` to request context
+6. Update `sdk_tokens.last_used_at` + run rate limit check (see below)
 
 Token format: `txk_live_` prefix + 32 random bytes as hex. Generated server-side, shown once.
+
+```typescript
+import { createHash, randomBytes } from 'crypto';
+
+// Token creation
+const rawToken = `txk_live_${randomBytes(32).toString('hex')}`;
+const tokenHash = createHash('sha256').update(rawToken).digest('hex');
+// Store tokenHash in sdk_tokens.token_hash; return rawToken to user once
+
+// Token validation (ingest route)
+const tokenHash = createHash('sha256').update(rawToken).digest('hex');
+const { data: token } = await supabase
+  .from('sdk_tokens')
+  .select('id, project_id, revoked_at')
+  .eq('token_hash', tokenHash)
+  .is('revoked_at', null)
+  .single();
+```
+
+## SDK Token Rate Limiting
+
+Enforced via a Postgres counter on `sdk_tokens` — no external service needed.
+
+```sql
+-- Columns added to sdk_tokens
+requests_this_minute  integer    default 0,
+minute_window         timestamptz default now()
+```
+
+Atomic check-and-increment via a Supabase RPC function:
+
+```sql
+CREATE OR REPLACE FUNCTION check_rate_limit(p_token_id uuid, p_limit integer)
+RETURNS boolean AS $$
+DECLARE
+  current_window timestamptz := date_trunc('minute', now());
+BEGIN
+  UPDATE sdk_tokens SET
+    requests_this_minute = CASE
+      WHEN minute_window = current_window THEN requests_this_minute + 1
+      ELSE 1
+    END,
+    minute_window = current_window
+  WHERE id = p_token_id;
+
+  RETURN (
+    SELECT requests_this_minute <= p_limit
+    FROM sdk_tokens WHERE id = p_token_id
+  );
+END;
+$$ LANGUAGE plpgsql;
+```
+
+Returns `false` → respond 429 with `Retry-After: 60`. At v1 scale this is reliable and requires no additional infrastructure.

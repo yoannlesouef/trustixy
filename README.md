@@ -99,32 +99,69 @@ One plan covers both SDK visibility and compliance — no split billing.
 
 ---
 
+## Technical Stack
+
+Next.js 14 · Supabase (Postgres + Auth + Storage) · Vercel Pro · Anthropic Claude API · Stripe · Resend
+
+---
+
 ## Specs
+
+### Product
 
 | Document | Location |
 |---|---|
 | Product definition | `specs/product.md` |
-| SDK reference | `specs/sdk.md` |
 | Features | `specs/features.md` |
-| Data model | `specs/data-model.md` |
-| API | `specs/api.md` |
 | UX | `specs/ux.md` |
 | Onboarding | `specs/onboarding.md` |
-| LLM prompts | `specs/llm-prompts.md` |
-| Internal agents | `specs/ai-agents.md` |
 | Prescriber partnership | `specs/prescriber-partnership.md` |
+| Feedback & community | `specs/feedback-community.md` |
+| Branding | `specs/branding.md` |
+
+### Technical
+
+| Document | Location |
+|---|---|
+| Infrastructure & project structure | `specs/infra.md` |
+| Data model | `specs/data-model.md` |
+| API | `specs/api.md` |
 | Auth | `specs/auth.md` |
 | Row Level Security | `specs/rls.md` |
-| Infrastructure & project structure | `specs/infra.md` |
+| SDK reference | `specs/sdk.md` |
+| LLM prompts | `specs/llm-prompts.md` |
+| Internal agents | `specs/ai-agents.md` |
 | Stripe integration | `specs/stripe.md` |
 | PDF generation | `specs/pdf.md` |
 | Error handling | `specs/errors.md` |
 | Email sequences | `specs/emails.md` |
-| SEO & content strategy | `specs/content/seo.md` |
-| Inbound marketing plan | `specs/content/inbound-marketing.md` |
-| Social network strategy | `specs/content/social.md` |
-| Partner landing page | `specs/content/partner-landing.md` |
+
+### Legal & Operations
+
+| Document | Location |
+|---|---|
+| Privacy & GDPR | `specs/privacy.md` |
+| Launch checklist | `specs/launch-checklist.md` |
+| CGU (Terms of Use) | `specs/content/cgu.md` |
+
+### Content & Guides
+
+| Document | Location |
+|---|---|
+| Home page | `specs/content/home.md` |
+| End-user guide | `specs/content/guide-end-user.md` |
+| Prescriber guide | `specs/content/guide-prescriber.md` |
+| Admin guide | `specs/content/guide-admin.md` |
 | Developer docs | `specs/content/developer-docs.md` |
+
+### Marketing *(not engineering specs)*
+
+| Document | Location |
+|---|---|
+| SEO strategy | `marketing/seo.md` |
+| Inbound marketing plan | `marketing/inbound-marketing.md` |
+| Social network strategy | `marketing/social.md` |
+| Partner landing page | `marketing/partner-landing.md` |
 
 ---
 

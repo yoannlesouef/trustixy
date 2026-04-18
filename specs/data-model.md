@@ -17,9 +17,11 @@
 * id (uuid)
 * project_id (uuid)
 * name (text) — human-readable label (e.g. "CI/CD", "local dev")
-* token_hash (text) — bcrypt hash; raw token shown once at creation
+* token_hash (text) — SHA-256 hash; raw token shown once at creation
 * last_used_at (timestamp) — nullable
 * revoked_at (timestamp) — nullable; null = active
+* requests_this_minute (integer) — default 0; reset when `minute_window` changes
+* minute_window (timestamptz) — default now(); tracks current rate limit window
 * created_at (timestamp)
 
 ### agents
@@ -30,7 +32,7 @@ Single table. Merges what was previously `agent_identities` (SDK) and `ai_system
 * organization_id (uuid)
 * project_id (uuid)
 * name (text) — editable; defaults to agent name from SDK config
-* slug (text) — unique per organization
+* slug (text) — unique per organization; DB composite unique constraint on `(organization_id, slug)`
 * description (text) — nullable; what this agent does (used for classification pre-fill)
 * use_case (text) — nullable; business process it supports
 * data_used (text) — nullable; types of data processed
@@ -95,6 +97,7 @@ Single table. Merges what was previously `agent_identities` (SDK) and `ai_system
 * action_id (uuid)
 * matched_pattern (text) — e.g. `**/.env`
 * affected_resource (text) — the file path accessed
+* severity (text) — always `high` (fixed for v1)
 * status (text) — `open` | `acknowledged` | `dismissed`
 * acknowledged_by (uuid) — nullable
 * acknowledged_at (timestamp) — nullable
@@ -115,6 +118,7 @@ Single table. Merges what was previously `agent_identities` (SDK) and `ai_system
 * subscription_status (text) — `active` | `past_due` | `canceled` | `trialing` | null
 * current_period_end (timestamp) — nullable
 * default_payment_method_id (text) — nullable; used for per-act co-signature charges
+* grace_period_ends_at (timestamp) — nullable; set to `past_due date + 7 days` when payment fails; access downgraded when this passes
 * created_at (timestamp)
 
 ### users
@@ -122,6 +126,8 @@ Single table. Merges what was previously `agent_identities` (SDK) and `ai_system
 * id (uuid)
 * organization_id (uuid)
 * email (text)
+* marketing_opted_out (boolean) — default false; blocks all behavioral/product emails when true
+* restricted_at (timestamp) — nullable; set when user invokes GDPR right to restriction; suspends all processing except storage
 * created_at (timestamp)
 
 ---
@@ -152,9 +158,12 @@ Single table. Merges what was previously `agent_identities` (SDK) and `ai_system
 * implementation_guide (text)
 * regulatory_reference (text)
 * done (boolean) — default false
-* updated_by (uuid)
+* updated_by (uuid) — nullable; user who last checked/unchecked
 * updated_at (timestamp)
+* archived_at (timestamp) — nullable; set when a new classification supersedes this one; archived obligations are preserved but not shown in the active checklist
 * created_at (timestamp)
+
+When a new classification is created for an agent, all previous obligations for that agent are soft-archived (`archived_at = now()`). The agent page shows only obligations where `archived_at IS NULL`.
 
 ### documents
 
@@ -165,7 +174,8 @@ Single table. Merges what was previously `agent_identities` (SDK) and `ai_system
 * content (text)
 * version (integer)
 * disclaimer_version (text)
-* signature_status (text) — `unsigned` | `pending_signature` | `co-signed` | `changes_requested`
+* signature_status (text) — `unsigned` | `pending_signature` | `co-signed`
+  — `changes_requested` is NOT a document status; it lives on `document_signatures.action`. When a prescriber requests changes, the document reverts to `unsigned` and the org must regenerate it.
 * is_current (boolean)
 * created_at (timestamp)
 
@@ -215,19 +225,17 @@ Immutable. Records all compliance platform actions.
 
 * id (uuid)
 * partner_id (uuid)
-* client_organization_id (uuid)
+* client_organization_id (uuid) — nullable until the invite is accepted
+* invite_token_hash (text) — bcrypt hash of the invite token; null once accepted
+* invite_email (text) — email the invitation was sent to
 * invited_at (timestamp)
-* activated_at (timestamp) — nullable
+* accepted_at (timestamp) — nullable
+* activated_at (timestamp) — nullable; set when client has at least one SDK session
 * status (text) — `invited` | `active`
+* expires_at (timestamp) — invite link expiry (7 days from invited_at)
 
-### integrator_projects
-
-* id (uuid)
-* integrator_partner_id (uuid)
-* client_organization_id (uuid)
-* project_name (text)
-* report_generated_at (timestamp) — nullable
-* created_at (timestamp)
+Invite link format: `trustixy.com/join?ref=[partner-slug]&token=[raw-token]`
+On accept: hash the token, match against `invite_token_hash`, verify `expires_at > now()`, create the org, set `client_organization_id`, clear `invite_token_hash`.
 
 ### cosignature_transactions
 
@@ -255,3 +263,43 @@ Immutable. Records all compliance platform actions.
 * output (jsonb)
 * admin_action (text) — `approved` | `dismissed` | `snoozed` | null
 * acted_at (timestamp)
+
+---
+
+## Feedback & Community Layer
+
+Full spec: [`/specs/feedback-community.md`](feedback-community.md)
+
+### feedback
+
+* id (uuid)
+* organization_id (uuid)
+* created_by (uuid)
+* type (text) — `bug` | `enhancement`
+* title (text)
+* description (text)
+* status (text) — `open` | `planned` | `in_progress` | `done` | `declined`
+* admin_response (text) — nullable
+* admin_responded_at (timestamp) — nullable
+* github_issue_number (integer) — nullable
+* github_issue_url (text) — nullable
+* vote_count (integer) — denormalized counter
+* created_at (timestamp)
+* updated_at (timestamp)
+
+### feedback_votes
+
+* id (uuid)
+* feedback_id (uuid)
+* user_id (uuid)
+* created_at (timestamp)
+
+Unique constraint: `(feedback_id, user_id)`
+
+### platform_settings
+
+Single-row table (`id = 'singleton'`). Upserted on write.
+
+* id (text) — always `'singleton'`
+* community_social_url (text) — nullable; Discord/Telegram/etc. link shown in dashboard if set
+* updated_at (timestamp)
