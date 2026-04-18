@@ -76,26 +76,26 @@ Install SDK (3-line snippet)
 
 ---
 
-## Prescriber Channel (B2B2B)
-
-Trustixy is distributed through prescriber partners — accounting firms, law firms, IT integrators — who introduce Trustixy to their clients and co-sign compliance documents.
-
-| Model | For | Trustixy cost | Partner revenue |
-|---|---|---|---|
-| **Per-act co-signature** | Accounting firms, consultants | €25 commission/act | Partner sets own fee (€150–500); direct Stripe payout |
-| **Integrator license** | IT integrators, ESN/SSII | €399/month | Bundle compliance into project deliverables |
-
----
-
 ## Pricing
 
-One plan covers both SDK visibility and compliance — no split billing.
+For organizations using the platform. One plan covers both SDK visibility and compliance — no split billing.
 
 | Plan | Price | What's included |
 |---|---|---|
 | **Free** | €0 | 3 agents · 30-day log · unsigned documents |
 | **Pro** | €99/month | Unlimited agents · 1-year log · co-signature requests · full obligation tracking |
 | **Enterprise** | Custom | Unlimited retention · SSO · JSON export · SLA · API |
+
+---
+
+## Prescriber Channel (B2B2B)
+
+A separate model for professional firms (accounting, legal, IT integrators) who distribute Trustixy to their clients and co-sign compliance documents. Partners have their own portal and pricing — independent from the organization plans above.
+
+| Partner model | Trustixy fee | Partner revenue |
+|---|---|---|
+| **Per-act co-signature** | €25/act | Partner sets own fee (€150–500); paid via Stripe Connect |
+| **Integrator license** | €399/month flat | Bundle compliance into client project deliverables |
 
 ---
 
